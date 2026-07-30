@@ -71,7 +71,7 @@ Em alinhamento com a **ITIL® 4**, o programa ITAM é concebido sob a ótica da 
 
 A exatidão da base de ativos garante que cientistas e pesquisadores tenham acesso a equipamentos funcionais, softwares devidamente licenciados e serviços de infraestrutura escaláveis. Paralelamente, a otimização de ativos reduz os desperdícios orçamentários, permitindo o redirecionamento de investimentos diretamente para a pesquisa de desenvolvimento e inovação (PD&I).
 
-## 1.2 As Quatro Dimensões do Gerenciamento de Serviços de TI
+## 1.2 As Quatro Dimensões da Gestão de Ativos de TI (ITAM)
 Para assegurar uma abordagem holística e evitar falhas comuns de implementação baseadas puramente em software, o programa ITAM é modelado sob a estrutura das **Quatro Dimensões do Gerenciamento de Serviço da ITIL® 4**:
 
 ```
