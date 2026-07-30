@@ -23,6 +23,7 @@
 | Versão | Data | Autor | Descrição |
 | --- | --- | --- | --- |
 | 1.0 | 30/07/2026 | Especialista ITAM & ITIL | Criação da proposta técnica completa de implantação do ITAM do zero utilizando a ferramenta Snipe-IT para a Embrapa (Sede + 43 Unidades Descentralizadas). |
+| 1.1 | 30/07/2026 | Especialista ITAM & ITIL | Revisão técnica com expansão do Dicionário de Dados de Campos Obrigatórios (Nativos e Customizados), protocolo de transferência entre UDs, conciliação patrimonial SIAFI e sanitização LGPD. |
 
 ---
 
@@ -163,6 +164,15 @@ Para atender à complexidade da Embrapa, o Snipe-IT será configurado utilizando
    - **Auditores Internos:** Acesso somente leitura para relatórios patrimoniais e de conformidade.
    - **Usuários Finais (Self-Service View):** Colaboradores de qualquer UD visualizam apenas os ativos sob sua responsabilidade e realizam o aceite digital dos Termos.
 
+## 4.2 Protocolo de Transferência de Ativos entre Unidades Descentralizadas (Multi-Company Transfer)
+
+Como a Embrapa opera com 43 UDs e a Sede sob o modelo *Multi-Company* (`full_multiple_companies_support = true`), a movimentação física ou lógica de um ativo entre UDs (ex: transferência de uma workstation de alto desempenho da `Embrapa Soja` para a `Embrapa Amazônia Oriental`) obedece ao seguinte protocolo padronizado no Snipe-IT:
+
+1. **Formalização no SEI:** A transferência patrimonial é previamente aprovada via Processo SEI pelas Chefias de Administração das UDs envolvidas.
+2. **Checkout de Trânsito no Snipe-IT:** A UD de origem altera o status do ativo para `Em Aquisição / Trânsito` e atribui a localização temporária `Em Trânsito Inter-UDs`.
+3. **Alteração da Entidade (*Company*):** O Admin de TI da UD de origem (ou Super Admin da Sede) altera o campo *Company* do ativo no Snipe-IT para a UD de destino.
+4. **Aceite e Recebimento Técnico:** Ao receber o equipamento, a TI da UD de destino valida o estado físico, altera o status para `Pronto para Uso (Estoque)` ou `Em Uso`, atualiza a localização física local (*Location*) e aciona o fluxo de Aceite Digital (EULA) para o novo responsável final.
+
 ---
 
 # 5. DETALHAMENTO DOS PILARES ITAM NO SNIPE-IT
@@ -187,6 +197,12 @@ O Snipe-IT utiliza *Status Labels* customizados divididos em quatro meta-status 
 ### Etiquetagem e Barcode / QR Code
 - Todos os ativos recebem **QR Codes** padronizados impressos diretamente via Snipe-IT em impressoras térmicas (ex: Zebra/Dymo) nas 43 UDs.
 - O QR Code contém a URL direta do ativo no Snipe-IT, permitindo que técnicos escaneiem a etiqueta com leitores corporativos ou aplicativos móveis para abrir a ficha do equipamento em segundos.
+
+### Sanitização de Dados (LGPD) e Descarte Ecológico (Wiping & Logística Reversa)
+Para garantir a conformidade estrita com a **LGPD (Lei nº 13.709/2018)** e a Política de Segurança da Informação da Embrapa:
+- **Sanitização de Mídias (Wiping):** Nenhum equipamento contendo mídias de armazenamento (HDs, SSDs, NVMes, Fitas de Backup) poderá ser baixado ou doado sem o procedimento prévio de sanitização lógica padronizado pelas normas **NIST SP 800-88 Rev. 1** ou **DoD 5220.22-M**.
+- **Laudo Técnico de Sanitização:** É obrigatório efetuar o upload do laudo em formato PDF (gerado pela ferramenta de *wiping*) na aba de anexos do ativo no Snipe-IT antes de alterar o status para `Aguardando Descarte`.
+- **Certificado de Destruição Ecológica:** Equipamentos destinados ao descarte final ou reciclagem de lixo eletrônico exigem o anexo do Certificado de Destruição/Reciclagem emitido por empresa homologada em logística reversa ambiental para a efetiva transição do ativo para o meta-status `Descartado / Sanitizado (Archived)`.
 
 ---
 
@@ -267,28 +283,99 @@ A governança do ITAM com o Snipe-IT divide responsabilidades entre a Sede (Gove
 
 ---
 
-# 8. DICIONÁRIO DE DADOS E CUSTOM FIELDS NO SNIPE-IT
+# 8. DICIONÁRIO DE DADOS E CAMPOS OBRIGATÓRIOS NO SNIPE-IT
 
-Para garantir a padronização das 43 UDs, a Sede definirá **Custom Fieldsets** (Conjuntos de Campos Customizados) obrigatórios no Snipe-IT:
+Para garantir a padronização e a auditabilidade em todas as 43 UDs e na Sede, a Sede estabelece a matriz de preenchimento obrigatório no Snipe-IT, dividida entre **Campos Nativos Globais** e **Custom Fieldsets (Campos Customizados por Categoria)**.
 
-### Fieldset 1: Endpoints (Notebooks / Desktops / Workstations)
-- **Número do Processo SEI:** Texto Curto (Mandatório)
-- **Número do Pedido / Nota Fiscal:** Texto Curto (Mandatório)
-- **Centro de Custo / Projeto:** Dropdown Unidades/Projetos Embrapa (Mandatório)
-- **Endereço MAC da Placa Principal:** Regex MAC (Mandatório)
-- **HostName / Nome na Rede:** Texto Curto (Mandatório)
-- **Criticidade do Equipamento:** Dropdown `[Baixa, Média, Alta, Crítica]` (Mandatório)
+---
 
-### Fieldset 2: Servidores e Infraestrutura de Data Center
-- **Endereço IP Gerenciamento / Out-of-Band (iDRAC/iLO):** IP Address (Mandatório)
-- **Unidade de Rack / Posição:** Texto Curto (Mandatório)
-- **Ambiente:** Dropdown `[Produção, Homologação, Desenvolvimento, Testes]` (Mandatório)
-- **Grupo Técnico Responsável:** Dropdown `[Redes, Servidores, DBA, Segurança]` (Mandatório)
+## 8.1 Campos Nativos Globais Obrigatórios (Hardware Assets)
 
-### Fieldset 3: Softwares Científicos & Licenças
-- **Modalidade de Licenciamento:** Dropdown `[Por Usuário, Por Máquina, Concorrente, Projeto]` (Mandatório)
-- **Código do Contrato de Licenciamento:** Texto Curto (Mandatório)
-- **Projeto de Pesquisa Vinculado:** Texto Curto (Condicional)
+Estes campos fazem parte do núcleo nativo do Snipe-IT e são de **preenchimento obrigatório para qualquer ativo de hardware** cadastrado no sistema:
+
+| Campo Native no Snipe-IT | Tipo de Dado / Formato | Regra de Preenchimento / Validação | Obrigatoriedade |
+| --- | --- | --- | --- |
+| **Asset Tag** | Texto Único | Número da Etiqueta / Tombamento Patrimonial Embrapa (QR Code). | **Obrigatório** |
+| **Model (Modelo)** | Seleção / Objeto | Associa o fabricante, categoria, especificações e o *Custom Fieldset* correspondente. | **Obrigatório** |
+| **Status Label** | Seleção / Status | Estado do Ciclo de Vida (`Em Uso`, `Pronto para Uso`, `Em Manutenção`, etc.). | **Obrigatório** |
+| **Serial Number (Número de Série)** | Texto Curto | Número de série atribuído pelo fabricante (Dell Service Tag, Lenovo S/N, Cisco S/N, Apple Serial, etc.). | **Obrigatório** |
+| **Company (Unidade Embrapa)** | Seleção / Multi-Company | Identifica a UD proprietária responsável (`Embrapa Sede` ou uma das 43 UDs). | **Obrigatório** |
+| **Location (Localização Física)** | Seleção Hierárquica | Edifício, Bloco, Sala ou Laboratório onde o bem está fisicamente alocado. | **Obrigatório** |
+| **Purchase Date (Data de Compra)** | Data (`YYYY-MM-DD`) | Data de emissão da Nota Fiscal de aquisição. | **Obrigatório** |
+| **Purchase Cost (Valor de Aquisição)** | Monetário (`BRL R$`) | Valor nominal de compra constante na Nota Fiscal. | **Obrigatório** |
+| **Supplier (Fornecedor)** | Seleção / Cadastro | Razão Social e CNPJ da empresa vencedora da licitação / contrato. | **Obrigatório** |
+| **Order Number (Empenho / NF)** | Texto Curto | Número da Nota Fiscal e/ou Nota de Empenho vinculada à aquisição. | **Obrigatório** |
+| **Warranty (Garantia em Meses)** | Numérico Inteiro | Período de garantia fornecido pelo fabricante/fornecedor (ex: `36` ou `60` meses). | **Obrigatório** |
+| **Assignee (Atribuído a)** | Seleção (Usuário ou Local) | Usuário (Matrícula AD) ou Localização de destino. **Obrigatório quando Status = "Em Uso"**. | **Condicional** |
+
+---
+
+## 8.2 Campos Customizados Obrigatórios por Categoria (Custom Fieldsets)
+
+No Snipe-IT, cada modelo de ativo é associado a um *Fieldset* customizado. Os campos abaixo são configurados com a flag `Required = Yes` na administração central do Snipe-IT:
+
+### 8.2.1 Fieldset 1: Endpoints (Notebooks, Desktops, Workstations)
+
+| Campo Customizado | Tipo de Campo no Snipe-IT | Regra / Máscara de Validação | Obrigatoriedade |
+| --- | --- | --- | --- |
+| **Número do Processo SEI** | `Textbox` | Formato Padrão SEI (`00000.000000/0000-00`) | **Obrigatório** |
+| **Número da Nota Fiscal (NF)** | `Textbox` | Numérico / Alfanumérico da NF | **Obrigatório** |
+| **Centro de Custo / Projeto SEI** | `Dropdown` | Lista de Projetos e Centros de Custos Embrapa | **Obrigatório** |
+| **HostName / Nome na Rede** | `Textbox` | Formato FQDN (`[HOSTNAME].embrapa.br`) | **Obrigatório** |
+| **Endereço MAC Ethernet** | `Textbox` | Regex MAC Address (`^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$`) | **Obrigatório** |
+| **Endereço MAC Wi-Fi** | `Textbox` | Regex MAC Address | **Obrigatório (se notebook/tablet)** |
+| **Criticidade do Equipamento** | `Dropdown` | Valores: `[Baixa, Média, Alta, Crítica]` | **Obrigatório** |
+| **Status Criptografia de Disco** | `Dropdown` | Valores: `[BitLocker Ativo, FileVault Ativo, Inativo, Não Suportado]` | **Obrigatório** |
+
+### 8.2.2 Fieldset 2: Dispositivos Móveis Corporativos (Smartphones e Tablets)
+
+| Campo Customizado | Tipo de Campo no Snipe-IT | Regra / Máscara de Validação | Obrigatoriedade |
+| --- | --- | --- | --- |
+| **Número do Processo SEI** | `Textbox` | Formato Padrão SEI | **Obrigatório** |
+| **IMEI 1 Principal** | `Textbox` | Regex IMEI (15 dígitos numéricos) | **Obrigatório** |
+| **IMEI 2 Secundário** | `Textbox` | Regex IMEI (15 dígitos numéricos) | **Obrigatório (se Dual SIM)** |
+| **Número da Linha Corporativa (MSISDN)** | `Textbox` | Formato `+55 (XX) 9XXXX-XXXX` | **Obrigatório** |
+| **Código do Chip SIM (ICCID)** | `Textbox` | Numérico (19-20 dígitos do chip) | **Obrigatório** |
+| **MDM Enrollment Status** | `Dropdown` | Valores: `[Matriculado/Ativo, Inativo, Não Encontrado]` | **Obrigatório** |
+
+### 8.2.3 Fieldset 3: Servidores e Infraestrutura de Data Center
+
+| Campo Customizado | Tipo de Campo no Snipe-IT | Regra / Máscara de Validação | Obrigatoriedade |
+| --- | --- | --- | --- |
+| **Número do Processo SEI** | `Textbox` | Formato Padrão SEI | **Obrigatório** |
+| **IP Out-of-Band (iDRAC / iLO / IPMI)** | `Textbox` | Formato IPv4 Validador | **Obrigatório** |
+| **IP Principal de Produção** | `Textbox` | Formato IPv4 / IPv6 Validador | **Obrigatório** |
+| **Localização em Rack & Elevação (U)** | `Textbox` | Exemplo: `Rack R-04 / Pos U12-U14` | **Obrigatório** |
+| **Ambiente de Execução** | `Dropdown` | Valores: `[Produção, Homologação, Desenvolvimento, Treinamento]` | **Obrigatório** |
+| **Grupo Técnico Responsável** | `Dropdown` | Valores: `[Suporte N3, Redes, DBAs, SysAdmins, Segurança, Cloud]` | **Obrigatório** |
+| **ID no Cofre de Senhas Corporativo** | `Textbox / URL` | Referência/ID de recurso no Cofre (Sem expor senhas) | **Obrigatório** |
+| **Número do Contrato de Suporte 24/7** | `Textbox` | Código do Contrato de Suporte/SLA do Fabricante | **Obrigatório** |
+
+### 8.2.4 Fieldset 4: Equipamentos Científicos & Tecnológicos de Campo
+
+| Campo Customizado | Tipo de Campo no Snipe-IT | Regra / Máscara de Validação | Obrigatoriedade |
+| --- | --- | --- | --- |
+| **Código do Projeto de Pesquisa (SEG)** | `Textbox` | Código de Projeto no Sistema SEG/Embrapa | **Obrigatório** |
+| **Pesquisador Responsável Técnico** | `Textbox` | Nome e Matrícula do Pesquisador Líder | **Obrigatório** |
+| **Ambiente de Operação Principal** | `Dropdown` | Valores: `[Laboratório Biossegurança, Campo Aberto, Casa de Vegetação, Embarcado]` | **Obrigatório** |
+| **Registro Anatel / ANAC** | `Textbox` | Homologação para Drones, Rádios RTK e Sensores | **Obrigatório (se drone/rádio)** |
+| **Código Fomento Externo (Finep/FAP)** | `Textbox` | Código do projeto de agência financiadora externa | **Condicional** |
+
+### 8.2.5 Módulo de Licenças de Software (SAM - Software Asset Management)
+
+No Snipe-IT, a gestão de licenças utiliza o módulo nativo **Licenses**. O preenchimento dos campos abaixo é **obrigatório** para a conformidade de auditoria SAM:
+
+| Campo no Módulo Licenses | Tipo de Dado | Regra / Descrição do Preenchimento | Obrigatoriedade |
+| --- | --- | --- | --- |
+| **Software Name (Nome e Versão)** | Texto Curto | Nome oficial da aplicação e versão (ex: `ArcGIS Pro 3.2`, `MATLAB R2024a`). | **Obrigatório** |
+| **Manufacturer (Fabricante)** | Seleção | Esri, MathWorks, Microsoft, SAS Institute, IBM, etc. | **Obrigatório** |
+| **Seats (Quantidade de Assentos)** | Numérico | Número total de licenças/assentos contratados. | **Obrigatório** |
+| **License Category (Categoria)** | Seleção | `Softwares Científicos`, `Sistemas Operacionais`, `Productividade`, `Segurança`. | **Obrigatório** |
+| **Product Key / Ativação** | Texto Protegido | Chave de licença corporativa ou método de ativação (KMS / Servidor FlexLM). | **Obrigatório** |
+| **Modalidade de Licenciamento** | Custom Field | Valores: `[Perpétua, SaaS Anual, Por Core/CPU, Por Usuário, Concorrente]`. | **Obrigatório** |
+| **Expiration Date (Vencimento)** | Data | Data de término da subscrição ou contrato de suporte (gera alertas automáticos). | **Obrigatório** |
+| **Processo SEI / Contrato** | Custom Field | Número do Processo SEI de Contratação da Licença. | **Obrigatório** |
+| **Escopo de Licenciamento** | Custom Field | Valores: `[Corporativo Sede, UD Específica, Projeto Científico Restrito]`. | **Obrigatório** |
 
 ---
 
@@ -322,6 +409,13 @@ O Snipe-IT será o coração da gestão de ativos, comunicando-se com a infraest
 3. **Integração com Sistema de ITSM / Chamados (TOPdesk / GLPI / Jira Service Management):**
    - Ao abrir um chamado de suporte ou incidente na ferramenta de ITSM, o analista consulta a API do Snipe-IT pelo Asset Tag/Patrimônio ou e-mail do usuário para associar o ativo ao ticket.
    - Facilita a identificação de equipamentos problemáticos ("limões") em qualquer UD.
+4. **Conciliação Físico-Contábil com o Sistema Patrimonial / SIAFI:**
+   - O Snipe-IT manterá integração de conciliação periódica com o sistema de Patrimônio e Contabilidade da Embrapa (SIAFI / Sistema Corporativo).
+   - O campo `Asset Tag` no Snipe-IT é rigorosamente espelhado como o **Número de Tombamento Patrimonial oficial**.
+   - Relatórios automatizados comparam o valor contábil amortizado com a localização física auditada no Snipe-IT, identificando eventuais baixas não registradas ou ativos não localizados.
+5. **Diretriz de Segurança para Credenciais de Ativos (Cofre de Senhas Corporativo):**
+   - **É expressamente proibido** armazenar senhas, chaves privadas ou segredos de acesso (como senhas de iDRAC, iLO, root de switches ou BIOS) em campos de texto do Snipe-IT.
+   - Os formulários de infraestrutura contêm apenas a URL/ID do recurso cadastrado no **Cofre de Senhas Corporativo** (ex: HashiCorp Vault / LAPS / Cofre de Segredos da Embrapa).
 
 ---
 
