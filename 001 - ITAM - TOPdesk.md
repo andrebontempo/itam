@@ -5,7 +5,7 @@
 | Campo | Informação |
 | --- | --- |
 | Documento | Diretrizes Corporativas para Implementação da Gestão de Ativos de TI (ITAM) |
-| Versão | 4.0 |
+| Versão | 5.0 |
 | Status | Proposta para Aprovação |
 | Autor | André Luiz Bontempo / Especialista ITIL v4 & Arquiteto TOPdesk |
 | Área Responsável | Tecnologia da Informação / Governança de TI |
@@ -27,7 +27,8 @@
 | 1.0 | 08/07/2026 | André Luiz Bontempo | Criação inicial do documento. |
 | 2.0 | 08/07/2026 | André Luiz Bontempo | Revisão estrutural, inclusão dos quatro pilares (HAM, SAM, Cloud/FinOps e ITCM), integração com CMDB e atualização das diretrizes conforme ITIL 4 e ISO/IEC 19770. |
 | 3.0 | 29/07/2026 | André Luiz Bontempo / Antigravity | Revisão conceitual focada em ITIL v4: co-criação de valor e Quatro Dimensões; refinamento do pilar Cloud/FinOps; integração operacional de incidentes e requisições; automatização por Action Sequences; Termo no SSP e LGPD. |
-| 4.0 | 14/09/2026 | André Luiz Bontempo / Antigravity | Revisão geral de governança e especificação funcional exaustiva dos Campos Obrigatórios no TOPdesk para Hardware (HAM) e Software (SAM), categorizados por abas (Geral, Técnica/CMDB, Financeira/ITCM e Custódia/LGPD), incluindo regras de nomenclatura e validações regex. |
+| 4.0 | 14/09/2026 | André Luiz Bontempo / Antigravity | Revisão geral de governança e especificação funcional exaustiva dos Campos Obrigatórios no TOPdesk para Hardware (HAM) e Software (SAM), categorizados por abas. |
+| 5.0 | 14/09/2026 | André Luiz Bontempo / Antigravity | Adequação estrita do escopo para Ativos de Tecnologia da Informação (TI), removendo visões e contextualizações de pesquisa agropecuária, biotecnologia e inovação no campo, focando exclusivamente na gestão corporativa de TI. |
 
 * * *
 
@@ -40,7 +41,7 @@ Este documento destina-se às seguintes áreas:
 - Segurança da Informação e Compliance
 - Compras, Suprimentos e Contratos
 - Patrimônio, Controladoria e Auditoria Interna
-- Gestores das Unidades de Negócio e de Pesquisa
+- Gestores das Unidades de Negócio
 
 * * *
 
@@ -68,9 +69,9 @@ Uma implementação eficiente de ITAM proporciona benefícios diretos para diver
 O presente documento estabelece as diretrizes para implantação do programa corporativo de Gestão de Ativos de TI, definindo sua arquitetura, princípios de governança, responsabilidades, categorias de ativos, estrutura mínima de dados, processos operacionais e modelo de evolução. Além disso, este documento servirá como referência para configuração do módulo de *Asset Management* do TOPdesk, definição dos processos organizacionais e integração com ferramentas de descoberta automática, monitoramento e gerenciamento de serviços.
 
 ## 1.1 Co-criação de Valor na Embrapa
-Em alinhamento com a **ITIL® 4**, o programa ITAM é concebido sob a ótica da **Co-criação de Valor**. Os ativos de TI não devem ser geridos meramente como bens contábeis ou itens isolados de infraestrutura, mas sim como habilitadores estratégicos que suportam diretamente as atividades finalísticas da Embrapa, tais como a pesquisa científica agropecuária, a biotecnologia e a inovação tecnológica no campo. 
+Em alinhamento com a **ITIL® 4**, o programa ITAM é concebido sob a ótica da **Co-criação de Valor**. Os ativos de TI não devem ser geridos meramente como bens contábeis ou itens isolados de infraestrutura, mas sim como habilitadores estratégicos que sustentam diretamente a produtividade, a eficiência operacional e a continuidade dos serviços corporativos de Tecnologia da Informação da Embrapa.
 
-A exatidão da base de ativos garante que cientistas e pesquisadores tenham acesso a equipamentos funcionais, softwares devidamente licenciados e serviços de infraestrutura escaláveis. Paralelamente, a otimização de ativos reduz os desperdícios orçamentários, permitindo o redirecionamento de investimentos diretamente para a pesquisa de desenvolvimento e inovação (PD&I).
+A exatidão da base de ativos garante que colaboradores e equipes técnicas tenham acesso a equipamentos funcionais, softwares devidamente licenciados e serviços de infraestrutura de alta disponibilidade. Paralelamente, a otimização de ativos reduz os desperdícios orçamentários, garantindo a governança financeira e a alocação eficiente dos recursos de TI.
 
 ## 1.2 As Quatro Dimensões da Gestão de Ativos de TI (ITAM)
 Para assegurar uma abordagem holística e evitar falhas comuns de implementação baseadas puramente em software, o programa ITAM é modelado sob a estrutura das **Quatro Dimensões do Gerenciamento de Serviço da ITIL® 4**:
@@ -132,7 +133,7 @@ Equipamentos tangíveis utilizados pela organização:
 ### 3.2 Ativos de Software
 Softwares instalados localmente (*On-Premise*) e licenças corporativas adquiridas:
 - Sistemas operacionais de servidores e estações, bancos de dados corporativos, suítes de escritório, ferramentas de desenvolvimento (Ex: Docker Desktop, JetBrains), middlewares, ferramentas de segurança (Ex: antivírus, EDR) e monitoramento.
-- **Softwares de Pesquisa Científica:** Softwares de alto valor e alta especialidade voltados para biotecnologia, genética, estatística e geomapeamento (Ex: MATLAB, SAS, ArcGIS/ArcMap, SPSS, softwares de sequenciamento genômico), cuja gestão é crítica devido à diversidade de modelos de licenciamento (por nó, concorrente, por volume ou acadêmico).
+- **Softwares Especialistas e Sistemas de TI:** Softwares corporativos de alto valor e alta especialidade voltados para engenharia de software, bancos de dados, infraestrutura e segurança (Ex: Oracle Database, Red Hat Enterprise Linux, VMware/Broadcom, JetBrains, ferramentas de BI e análise estatística), cuja gestão é crítica devido à diversidade de modelos de licenciamento (por core, concorrente, por volume ou subscrição).
 
 ### 3.3 Serviços em Nuvem
 Serviços contratados em modelos de consumo, subscrição ou utilidade:
@@ -200,15 +201,15 @@ Cada pilar possui objetivos próprios, regras de categorização e indicadores e
 
 > [!IMPORTANT]
 > **Requisito Cadastral no TOPdesk (SAM):**
-> As licenças corporativas, subscrições SaaS e softwares de pesquisa científica da Embrapa devem ter seus registros efetuados rigorosamente com base no **Dicionário de Campos de Software (Apêndice D.2)**. O controle de conformidade entre licenças adquiridas e instâncias ativas coletadas via varredura automatizada depende da precisão destes atributos.
+> As licenças corporativas, subscrições SaaS e softwares especialistas de TI da Embrapa devem ter seus registros efetuados rigorosamente com base no **Dicionário de Campos de Software (Apêndice D.2)**. O controle de conformidade entre licenças adquiridas e instâncias ativas coletadas via varredura automatizada depende da precisão destes atributos.
 
 ### Exemplos de Registro no Sistema
 - **Exemplo 1 – Microsoft 365**
   - **Serviço:** Microsoft 365 Business Premium | **Tipo:** SaaS
   - **Métrica:** Mensal por usuário | **Contratadas:** 150 | **Em uso:** 132 | **Disponíveis:** 18
-- **Exemplo 2 – Softwares de Pesquisa Científica (Ex: MATLAB / ArcGIS)**
-  - **Serviço:** MATLAB Campus Wide License | **Tipo:** Licença de Pesquisa / Concorrente (*Floating*)
-  - **Métrica:** Anual por nó/servidor de licença | **Servidor:** LICSVR-LAB-01 | **Módulos:** Simulink, BioInformatics Toolbox
+- **Exemplo 2 – Softwares Especialistas de TI (Ex: JetBrains / Oracle DB)**
+  - **Serviço:** JetBrains All Products Pack | **Tipo:** Licença Corporativa / Concorrente (*Floating*)
+  - **Métrica:** Anual por assento/servidor de licença | **Servidor:** LICSVR-DEV-01 | **Módulos:** IntelliJ, PyCharm, WebStorm
 - **Exemplo 3 – GitHub Enterprise**
   - **Serviço:** GitHub Enterprise Cloud | **Tipo:** SaaS (Assento de Desenvolvedor)
   - **Métrica:** Anual | **Quantidade Contratada:** 25
@@ -238,7 +239,7 @@ As ferramentas nativas de gerenciamento de custos de nuvem serão configuradas p
 ### Exemplos de Registro no Sistema
 - **Exemplo 1 — Infraestrutura em Nuvem (IaaS)**
   - **Serviço:** AWS EC2 + Amazon RDS | **Tipo:** IaaS | **Cobrança:** Consumo por Hora
-  - **Governança:** Vinculado ao Centro de Custo da Pesquisa Genômica | **Ação:** Webhook integrado para abertura de incidente se houver desvio orçamentário.
+  - **Governança:** Vinculado ao Centro de Custo da Infraestrutura de TI | **Ação:** Webhook integrado para abertura de incidente se houver desvio orçamentário.
 - **Exemplo 2 — Inteligência Artificial (APIs)**
   - **Serviço:** OpenAI API | **Tipo:** API Comercial | **Cobrança:** Volume de Tokens
   - **Controle:** Teto diário configurado via API Management.
@@ -282,7 +283,7 @@ A Gestão de Ativos de TI é um processo corporativo transversal e integrado. As
 - **Tecnologia da Informação (Operação de TI):** Responsável pela administração operacional do programa ITAM, gerenciamento da ferramenta TOPdesk, execução de inventários técnicos automáticos, validação e manutenção da integridade da CMDB, atualização do ciclo de vida técnico e emissão de relatórios operacionais.
 - **Compras (Suprimentos e Contratos):** Responsável pelo relacionamento comercial com fornecedores, condução de processos de aquisição de hardware e software, negociação de cláusulas de suporte e contratualizações, controle de reajustes e formalização de renovações de licenças.
 - **Patrimônio / Controladoria:** Atua conjuntamente com a TI para garantir a conciliação físico-contábil, aplicação de etiquetas de patrimônio físico (regras de emplaquetamento corporativo), cálculo de depreciação de hardware e formalização de termos de baixa e descarte de bens.
-- **Gestores das Unidades de Negócio / Unidades de Pesquisa:** Responsáveis por aprovar requisições de ativos para suas equipes, validar periodicamente a listagem de colaboradores sob sua gestão que possuem ativos atribuídos e notificar formalmente a TI sobre desligamentos ou transferências internas.
+- **Gestores das Unidades de Negócio:** Responsáveis por aprovar requisições de ativos para suas equipes, validar periodicamente a listagem de colaboradores sob sua gestão que possuem ativos atribuídos e notificar formalmente a TI sobre desligamentos ou transferências internas.
 - **Usuários Finais:** Responsáveis diretos pela guarda, zelo e conservação dos ativos físicos fornecidos para o exercício de suas funções, devendo efetuar o aceite digital do Termo de Responsabilidade no Portal de Autoatendimento (SSP) e reportar imediatamente perdas, roubos ou incidentes operacionais.
 - **Governança de TI / Compliance:** Responsável por auditar os processos de ITAM, definir e revisar as políticas corporativas do programa, acompanhar os KPIs estratégicos e avaliar o avanço do nível de maturidade da organização frente ao mercado.
 
@@ -336,7 +337,7 @@ O principal valor da CMDB reside no mapeamento das relações de dependência en
 [Portal Corporativo Web] ──> [Balanceador NGINX] ──> [Container Docker] ──> [Cluster Kubernetes (PaaS)]
                                                                                       │
                                                                                       ▼
-                                                                           [MongoDB Atlas (Cloud DB)]
+                                                                            [MongoDB Atlas (Cloud DB)]
 ```
 
 ### Tipos de Relacionamento Suportados no TOPdesk
@@ -350,12 +351,12 @@ Para manter a consistência da árvore de serviços, a CMDB utilizará exclusiva
 
 ## 7.4 Benefícios da Integração Operacional com Módulos Operantes (Incidentes e Requisições)
 
-Considerando que a Embrapa já tem consolidado o uso do TOPdesk para a **Gestão de Incidentes** e **Requisição de Serviços**, a ativação da CMDB e ITAM potencializará a operação da seguinte forma:
+Considerando que a Embrapa já tem consolidado o uso do TOPdesk para a **Gestão de Incidentes** e **Requisição de Serviços**, a ativação da CMDB e ITAM potencializará a operation da seguinte forma:
 
 - **Vinculação Obrigatória em Incidentes:** Todos os chamados de incidentes abertos, tanto na interface dos analistas de Service Desk quanto na abertura pelo Portal de Autoatendimento (SSP) do usuário final, deverão obrigatoriamente ter o Ativo/CI impactado selecionado.
 - **Identificação de Ativos Problemáticos ("Limões"):** O TOPdesk consolidará no Cartão de Ativo todo o histórico de chamados abertos vinculados a ele. Isso possibilita à TI a visualização rápida e geração de relatórios de equipamentos com recorrência crítica de falhas, acelerando a tomada de decisão para manutenção corretiva especializada ou aceleração de sua substituição programada (*Hardware Refresh*).
 - **Integração com a Base de Conhecimento:** Ao selecionar um Ativo/CI afetado na tela do chamado, o TOPdesk associará e sugerirá de forma proativa itens da Base de Conhecimento correlatos, agilizando o *troubleshooting* pelo técnico.
-- **Análise de Impacto em Mudanças (Change Management):** Antes de aprovar uma manutenção preventiva ou corretiva de infraestrutura, a árvore de CMDB exibirá de forma gráfica e automatizada quais aplicações corporativas, servidores lógicos e serviços de negócio voltados à pesquisa científica serão paralisados ou afetados.
+- **Análise de Impacto em Mudanças (Change Management):** Antes de aprovar uma manutenção preventiva ou corretiva de infraestrutura, a árvore de CMDB exibirá de forma gráfica e automatizada quais aplicações corporativas, servidores lógicos e serviços de TI do negócio serão paralisados ou afetados.
 
 * * *
 
@@ -535,7 +536,7 @@ O amadurecimento das práticas de gestão de ativos seguirá o seguinte escalona
 
 O sucesso da implementação do programa corporativo de ITAM e CMDB na organização depende fundamentalmente do cumprimento dos seguintes fatores:
 
-1. Apoio contínuo e visível da Alta Administração para a cobrança de conformidade dos processos por parte das demais gerências de negócio e unidades de pesquisa.
+1. Apoio contínuo e visível da Alta Administração para a cobrança de conformidade dos processos por parte das demais gerências de negócio.
 2. Manutenção rigorosa da disciplina operacional de atualização dos cadastros no TOPdesk; ferramentas tecnológicas tornam-se obsoletas se os processos humanos falharem.
 3. Foco na capacitação continuada das equipes de TI, Compras e Controladoria nos conceitos de ITIL 4, ISO 19770 e práticas FinOps.
 
@@ -597,7 +598,7 @@ Para a parametrização inicial do módulo de novos ativos do TOPdesk, a estrutu
 
 ### 2. Classe Principal: Ativos de Software e Nuvem (SAM & Cloud)
 - **Tipo de Ativo (Asset Type):** Licenciamento On-Premise
-  - *Templates:* Banco de Dados (Instância Local), Sistema Operacional Servidor, Softwares de Pesquisa (MATLAB, ArcGIS, etc.).
+  - *Templates:* Banco de Dados (Instância Local), Sistema Operacional Servidor, Softwares Especialistas de TI.
 - **Tipo de Ativo (Asset Type):** Subscrições SaaS
   - *Templates:* Conta M365, Assento GitHub Enterprise, Licença Salesforce.
 - **Tipo de Ativo (Asset Type):** Componentes de Nuvem (CIs de Governança)
@@ -678,30 +679,30 @@ Os ativos físicos de TI (User Endpoints, Infraestrutura de Data Center, Equipam
 
 ## D.2 – Dicionário de Campos Obrigatórios para Ativos de Software & Licenciamento (SAM)
 
-Os softwares instalados (*On-Premise*), subscrições em nuvem (*SaaS*) e softwares de pesquisa científica da Embrapa devem obrigatoriamente registrar os seguintes atributos no TOPdesk:
+Os softwares instalados (*On-Premise*), subscrições em nuvem (*SaaS*) e softwares especialistas de TI da Embrapa devem obrigatoriamente registrar os seguintes atributos no TOPdesk:
 
 ### Aba 1: Identificação do Software & Licença (SAM)
 
 | Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
 | --- | --- | --- | --- | --- |
-| **Nome Oficial do Software** | Texto Curto | **Mandatório** | Nomenclatura oficial (Ex: `Microsoft 365 Enterprise`, `MATLAB Campus Wide`, `ArcGIS Pro`, `Docker Desktop`). | Governança TI |
-| **Categoria de Software** | Dropdown | **Mandatório** | Seleção: `[Sistema Operacional, Suíte de Escritório, Segurança/EDR, Desenvolvimento, Software de Pesquisa Científica, Banco de Dados, Middleware]`. | Governança TI |
-| **Fabricante / Publisher** | Dropdown / Texto | **Mandatório** | Desenvolvedor homologado: `[Microsoft, MathWorks, ESRI, Oracle, Red Hat, JetBrains, SAS Institute, IBM]`. | Governança TI / SAM |
+| **Nome Oficial do Software** | Texto Curto | **Mandatório** | Nomenclatura oficial (Ex: `Microsoft 365 Enterprise`, `JetBrains All Products Pack`, `Oracle DB Enterprise`, `Docker Desktop`). | Governança TI |
+| **Categoria de Software** | Dropdown | **Mandatório** | Seleção: `[Sistema Operacional, Suíte de Escritório, Segurança/EDR, Desenvolvimento, Software Especialista de TI, Banco de Dados, Middleware]`. | Governança TI |
+| **Fabricante / Publisher** | Dropdown / Texto | **Mandatório** | Desenvolvedor homologado: `[Microsoft, Oracle, Red Hat, JetBrains, VMware, IBM, Cisco]`. | Governança TI / SAM |
 | **Versão / Release Homologada** | Texto Curto | **Mandatório** | Versão ou edição contratada (Ex: `2024.1`, `Enterprise Edition`, `Standard`, `Pro`). | Operação TI / SAM |
 | **Estado do Licenciamento** | Dropdown | **Mandatório** | Valores: `[Ativo, Em Renovação, Expirado, Descontinuado, Sublicenciado]`. | Gestão de Licenças / SAM |
-| **Criticidade para a Operação/Pesquisa** | Dropdown | **Mandatório** | Classificação de impacto no negócio/pesquisa: `[Baixa, Média, Alta, Crítica]`. | Governança TI |
+| **Criticidade para a Operação de TI** | Dropdown | **Mandatório** | Classificação de impacto no negócio: `[Baixa, Média, Alta, Crítica]`. | Governança TI |
 
 ### Aba 2: Métricas de Licenciamento & Instalações (SAM)
 
 | Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
 | --- | --- | --- | --- | --- |
-| **Modelo de Licenciamento** | Dropdown | **Mandatório** | Valores: `[Nomeada/Por Usuário, Concorrente/Floating, Por Core/CPU, Por Dispositivo/Node-Locked, Assento SaaS, Licença Acadêmica/Pesquisa]`. | Gestão de Licenças / SAM |
+| **Modelo de Licenciamento** | Dropdown | **Mandatório** | Valores: `[Nomeada/Por Usuário, Concorrente/Floating, Por Core/CPU, Por Dispositivo/Node-Locked, Assento SaaS, Licença Corporativa]`. | Gestão de Licenças / SAM |
 | **Métrica de Cobrança** | Dropdown | **Mandatório** | Valores: `[Mensal (Subscrição), Anual (Subscrição), Perpétua com Manutenção, Consumo por Utilização]`. | Compras / SAM |
 | **Quantidade Contratada / Adquirida** | Número Inteiro | **Mandatório** | Total exato de licenças ou assentos adquiridos conforme o contrato amparador. | Compras / SAM |
 | **Quantidade de Instalações / Alocações Ativas** | Número Inteiro | **Mandatório** | Total de licenças efetivamente em uso. Sincronizado mensalmente via Intune/Discovery ou API SaaS. | Discovery / SAM |
 | **Licenças Disponíveis em Estoque** | Número (Calculado) | **Mandatório** | Campo de fórmula: `[Quantidade Contratada] - [Quantidade Ativa]`. Mede ociosidade. | Sistema (Fórmula) |
 | **Chave de Ativação / License Key / Tenant ID** | Texto (Criptografado) | Condicional | Chave de registro ou ID do Tenant SaaS. Visibilidade restrita aos Administradores SAM. | Gestão de Licenças |
-| **Servidor de Licenças (License Host)** | Texto / Link | Condicional | Obrigatório para licenças concorrentes (*floating*): Hostname ou IP do servidor FlexLM/RLM. | Operação TI |
+| **Servidor de Licenças (License Host)** | Texto / Link | Condicional | Obrigatório para licenças concorrentes (*floating*): Hostname ou IP do servidor de licenças. | Operação TI |
 
 ### Aba 3: Financeira, Contratual & Governança (SAM)
 
@@ -712,13 +713,13 @@ Os softwares instalados (*On-Premise*), subscrições em nuvem (*SaaS*) e softwa
 | **Data de Ativação da Licença** | Data | **Mandatório** | Data inicial de concessão do direito de uso. | Compras / SAM |
 | **Data de Expiração / Renovação** | Data | Condicional | Obrigatório para subscrições e licenças com prazo determinado. Alerta automático aos 120 dias. | Compras / SAM |
 | **Valor Total do Licenciamento (R$)** | Moeda (BRL) | **Mandatório** | Custo total do lote ou valor anuidade da subscrição. | Compras |
-| **Centro de Custo Financeiro** | Dropdown | **Mandatório** | Unidade organizacional ou projeto de pesquisa responsável pelo custeio. | Compras / Governança |
+| **Centro de Custo Financeiro** | Dropdown | **Mandatório** | Unidade organizacional responsável pelo custeio. | Compras / Governança |
 
 ### Aba 4: Atribuição, Usuários & Compliance Auditável (SAM)
 
 | Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
 | --- | --- | --- | --- | --- |
-| **Unidade / Laboratório Beneficiário** | Dropdown | **Mandatório** | Unidade da Embrapa ou Centro de Pesquisa finalístico que utiliza o software. | Governança TI |
+| **Unidade Organizacional Beneficiária** | Dropdown | **Mandatório** | Unidade da Embrapa que utiliza o software. | Governança TI |
 | **Lista de Usuários / Dispositivos Elegíveis** | Tabela Relacionada | Condicional | Mapeamento de quais pessoas ou computadores possuem direito de uso atribuído. | Operação TI / SAM |
 | **Status de Conformidade (Audit Status)** | Dropdown | **Mandatório** | Resultado da conciliação: `[Em Conformidade, Sublicenciado (Risco), Superlicenciado (Desperdício)]`. | Auditoria ITAM / SAM |
 | **Data da Última Auditoria SAM** | Data | **Mandatório** | Registro do último batimento entre inventário técnico e licenças contratuais. | Gestão de Licenças |
