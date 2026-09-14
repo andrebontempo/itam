@@ -5,15 +5,15 @@
 | Campo | Informação |
 | --- | --- |
 | Documento | Diretrizes Corporativas para Implementação da Gestão de Ativos de TI (ITAM) |
-| Versão | 3.0 |
+| Versão | 4.0 |
 | Status | Proposta para Aprovação |
 | Autor | André Luiz Bontempo / Especialista ITIL v4 & Arquiteto TOPdesk |
 | Área Responsável | Tecnologia da Informação / Governança de TI |
 | Projeto | Implantação do IT Asset Management (ITAM) no TOPdesk |
 | Ferramenta | TOPdesk Asset Management (Módulo Flexível de Ativos) |
 | Data de Emissão | 08/07/2026 |
-| Última Revisão | 29/07/2026 |
-| Próxima Revisão | Julho / 2027 |
+| Última Revisão | 14/09/2026 |
+| Próxima Revisão | Setembro / 2027 |
 | Classificação | Uso Interno |
 | Aprovador | *(preencher)* |
 | Base Conceitual | ITIL® 4, ISO/IEC 19770, ISO 55000, FinOps Foundation, boas práticas de ITAM e CMDB |
@@ -26,7 +26,8 @@
 | --- | --- | --- | --- |
 | 1.0 | 08/07/2026 | André Luiz Bontempo | Criação inicial do documento. |
 | 2.0 | 08/07/2026 | André Luiz Bontempo | Revisão estrutural, inclusão dos quatro pilares (HAM, SAM, Cloud/FinOps e ITCM), integração com CMDB e atualização das diretrizes conforme ITIL 4 e ISO/IEC 19770. |
-| 3.0 | 29/07/2026 | André Luiz Bontempo / Antigravity | Revisão conceitual focada em ITIL v4: co-criação de valor e Quatro Dimensões; refinamento do pilar Cloud/FinOps (remoção de telemetria fina e inclusão de webhooks); integração operacional de incidentes (ativos "limões") e requisições; automatização por Action Sequences; Termo de Responsabilidade digital no SSP; regras de conciliação de dados; conformidade com LGPD e expansão do dicionário de dados. |
+| 3.0 | 29/07/2026 | André Luiz Bontempo / Antigravity | Revisão conceitual focada em ITIL v4: co-criação de valor e Quatro Dimensões; refinamento do pilar Cloud/FinOps; integração operacional de incidentes e requisições; automatização por Action Sequences; Termo no SSP e LGPD. |
+| 4.0 | 14/09/2026 | André Luiz Bontempo / Antigravity | Revisão geral de governança e especificação funcional exaustiva dos Campos Obrigatórios no TOPdesk para Hardware (HAM) e Software (SAM), categorizados por abas (Geral, Técnica/CMDB, Financeira/ITCM e Custódia/LGPD), incluindo regras de nomenclatura e validações regex. |
 
 * * *
 
@@ -177,6 +178,10 @@ Cada pilar possui objetivos próprios, regras de categorização e indicadores e
 ## 5.1 Hardware Asset Management (HAM)
 **Objetivo:** Gerenciar o ciclo de vida completo dos ativos físicos. Garante controle patrimonial, localização geográfica, atribuição de responsabilidade e planejamento de ciclos de renovação tecnológica (*hardware refresh*).
 
+> [!IMPORTANT]
+> **Requisito Cadastral no TOPdesk (HAM):**
+> Todo ativo físico deve ter seu **Cartão de Ativo** preenchido obrigatoriamente conforme o **Dicionário de Campos de Hardware (Apêndice D.1)**. A ausência de preenchimento dos campos obrigatórios (como Número de Série, Patrimônio e Centro de Custo) bloqueará a disponibilização do equipamento no catálogo de serviços do Service Desk.
+
 ### Exemplos de Registro no Sistema
 - **Exemplo 1 – User Endpoints**
   - **Patrimônio:** PAT-2026-0894 | **Ativo:** Notebook Dell Latitude 3440
@@ -193,16 +198,20 @@ Cada pilar possui objetivos próprios, regras de categorização e indicadores e
 ## 5.2 Software Asset Management (SAM)
 **Objetivo:** Controlar e otimizar softwares baseados em licenças locais ou subscrições SaaS. Destina-se a mitigar os riscos de sublicenciamento (penalidades em auditorias) e evitar custos com superlicenciamento (licenças ociosas).
 
+> [!IMPORTANT]
+> **Requisito Cadastral no TOPdesk (SAM):**
+> As licenças corporativas, subscrições SaaS e softwares de pesquisa científica da Embrapa devem ter seus registros efetuados rigorosamente com base no **Dicionário de Campos de Software (Apêndice D.2)**. O controle de conformidade entre licenças adquiridas e instâncias ativas coletadas via varredura automatizada depende da precisão destes atributos.
+
 ### Exemplos de Registro no Sistema
 - **Exemplo 1 – Microsoft 365**
   - **Serviço:** Microsoft 365 Business Premium | **Tipo:** SaaS
   - **Métrica:** Mensal por usuário | **Contratadas:** 150 | **Em uso:** 132 | **Disponíveis:** 18
-- **Exemplo 2 – GitHub Enterprise**
+- **Exemplo 2 – Softwares de Pesquisa Científica (Ex: MATLAB / ArcGIS)**
+  - **Serviço:** MATLAB Campus Wide License | **Tipo:** Licença de Pesquisa / Concorrente (*Floating*)
+  - **Métrica:** Anual por nó/servidor de licença | **Servidor:** LICSVR-LAB-01 | **Módulos:** Simulink, BioInformatics Toolbox
+- **Exemplo 3 – GitHub Enterprise**
   - **Serviço:** GitHub Enterprise Cloud | **Tipo:** SaaS (Assento de Desenvolvedor)
   - **Métrica:** Anual | **Quantidade Contratada:** 25
-- **Exemplo 3 – ChatGPT Enterprise**
-  - **Serviço:** ChatGPT Enterprise | **Tipo:** SaaS | **Métrica:** Mensal
-  - **Alocação:** Equipe de Produto e Inovação | **Quantidade Contratada:** 10
 
 * * *
 
@@ -600,26 +609,142 @@ Para a parametrização inicial do módulo de novos ativos do TOPdesk, a estrutu
 
 * * *
 
-# APÊNDICE D – DICIONÁRIO DE DADOS MÍNIMO (TOPDESK INTERFACE)
+# APÊNDICE D – DICIONÁRIO DE DADOS E ESPECIFICAÇÃO DE CAMPOS OBRIGATÓRIOS NO TOPDESK
 
-Este dicionário serve como especificação funcional para a criação de campos obrigatórios dentro dos formulários de cadastro de ativos da plataforma TOPdesk.
+Este dicionário serve como especificação funcional e normativa para a parametrização dos formulários cadastrais no módulo de **Asset Management** do TOPdesk. 
 
-| Nome do Campo | Tipo do Dado | Obrigatoriedade | Regra de Preenchimento / Origem | Responsável |
+Para assegurar a governança, integridade e conformidade com a LGPD e ITIL® 4, a exibição dos campos é organizada por **Abas de Cadastro** com permissões diferenciadas de edição e visualização.
+
+---
+
+## D.1 – Dicionário de Campos Obrigatórios para Ativos de Hardware (HAM)
+
+Os ativos físicos de TI (User Endpoints, Infraestrutura de Data Center, Equipamentos de Telecomunicações e Periféricos) devem ser cadastrados contemplando rigorosamente a seguinte estrutura de atributos:
+
+### Aba 1: Informações Gerais & Identificação (HAM)
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
 | --- | --- | --- | --- | --- |
-| **Identificador Único (Nome)** | Texto Curto | **Mandatório** | Padrão de Nomenclatura: `[Sigla]-[Sequencial]` (Ex: NB-0894). | Operação TI |
-| **Número de Patrimônio** | Alfanumérico | **Mandatório (HAM)** | Número gravado na etiqueta física de metal colada pela Controladoria. | Patrimônio |
-| **Número de Série (S/N)** | Texto Curto | **Mandatório (HAM)** | Código de série exclusivo do fabricante extraído via BIOS ou etiqueta de fábrica. | Operação TI |
-| **Estado do Ciclo de Vida** | Dropdown | **Mandatório** | Valores válidos fixos: `[Planejado, Em Estoque, Em Uso, Manutenção, Desativado]`. | Operação TI |
-| **Usuário Responsável** | Link Interno | Condicional | Obrigatório se o status for "Em Uso". Busca direta na tabela de Pessoas. | Operação TI |
-| **Centro de Custo** | Dropdown | **Mandatório** | Código contábil da área de lotação financeira do ativo para rateio de despesas. | Compras / TI |
-| **Código do Contrato Vinculado** | Link Interno | **Mandatório** | Relacionamento obrigatório com a classe de Contratos (ITCM) ativa no sistema. | Compras |
-| **Criticidade do Ativo** | Dropdown | **Mandatório** | Classificação de Impacto: `[Baixa, Média, Alta, Crítica (Missão Crítica)]`. | Governança TI |
-| **Endereço MAC Principal** | Texto (Regex) | Condicional | Obrigatório para ativos de rede e endpoints com placa de comunicação ativa. | Descoberta Aut. |
-| **Ambiente** | Dropdown | **Mandatório** | Valores: `[Produção, Homologação, Desenvolvimento, Testes]`. Classificação de ambiente do CI. | Operação TI |
-| **Tipo de Licença** | Dropdown | **Mandatório (SAM)** | Valores: `[Mensal (SaaS), Anual (SaaS), Perpétua (On-Premise)]`. | Compras |
-| **Responsável Técnico (Grupo)** | Link Interno | **Mandatório (CMDB)** | Vinculação ao Grupo de Especialistas (ex: Equipe de Redes, DBA). | Operação TI |
-| **Certificado de Sanitização** | Upload de Arquivo | Condicional (Descarte) | Arquivo PDF atestando a limpeza e formatação segura dos dados (ISO 27001). | Operação TI |
-| **ID da Conta Cloud / Assinatura** | Texto Curto | Condicional (Cloud) | Identificação do Tenant ou conta onde o recurso reside na nuvem. | Operação TI / Compras |
-| **Link FinOps / Monitoramento** | URL | Condicional (Cloud) | Link direto para o painel de monitoramento do ativo na console original da Cloud. | Operação TI |
-| **Status do Termo de Resp.** | Dropdown | Condicional (HAM) | Valores: `[Aguardando Aceite no SSP, Aceito Digitalmente, Não Aplicável]`. | Operação TI |
-| **Data do Aceite do Termo** | Data/Hora | Condicional (HAM) | Data e hora em que o usuário realizou o aceite do termo no Portal SSP (via Action Sequence). | Operação TI |
+| **Identificador Único (Asset Tag)** | Texto Curto | **Mandatório** | Padrão `[Sigla]-[Sequencial]` (Ex: `NB-0894`, `SRV-0042`). Chave primária. | Operação TI / Inventário |
+| **Categoria de Ativo (Asset Type)** | Dropdown | **Mandatório** | Seleção fixa: `[User Endpoints, Infraestrutura, Telecom, Periféricos/Reserva]`. | Operação TI |
+| **Subtipo / Template** | Dropdown | **Mandatório** | Valores: `[Notebook, Desktop, Tablet, Smartphone, Servidor Físico, Storage, Switch, Firewall, Nobreak, Impressora]`. | Operação TI |
+| **Número de Patrimônio** | Alfanumérico | **Mandatório** | Número gravado na etiqueta física de metal colada no equipamento. | Controladoria / Patrimônio |
+| **Estado do Ciclo de Vida** | Dropdown | **Mandatório** | Valores: `[Planejado, Em Estoque, Em Uso, Em Manutenção, Em Descarte, Desativado]`. | Operação TI |
+| **Criticidade do Ativo** | Dropdown | **Mandatório** | Classificação: `[Baixa, Média, Alta, Crítica (Missão Crítica)]`. | Governança TI |
+| **Unidade / Lotação Geográfica** | Dropdown / Link | **Mandatório** | Seleção da Unidade Embrapa (Ex: `Embrapa Sede`, `Embrapa Agrobiologia`, `Data Center Prédio Central`). | Operação TI |
+| **Localização Física Detalhada** | Texto Curto | Condicional | Obrigatório para Data Center/Infraestrutura: `[Bloco B - Sala 102 - Rack 04 - U12]`. | Infraestrutura TI |
+
+### Aba 2: Especificações Técnicas & CMDB (HAM)
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Número de Série (S/N)** | Texto Curto | **Mandatório** | Código de série exclusivo gravado na BIOS/placa-mãe pelo fabricante. | Operação TI / Discovery |
+| **Fabricante / Marca** | Dropdown / Texto | **Mandatório** | Catálogo homologado: `[Dell, Lenovo, HPE, Cisco, Aruba, Apple, Samsung, APC, Zebra]`. | Operação TI |
+| **Modelo Comercial** | Texto Curto | **Mandatório** | Modelo exato do equipamento (Ex: `Latitude 3440`, `ProLiant DL380 Gen10`). | Operação TI |
+| **Processador / vCPU** | Texto Curto | Condicional | Obrigatório para endpoints e servidores (Ex: `Intel Core i7-13700H`, `AMD EPYC 7763`). Coletado via Discovery. | Discovery / TI |
+| **Memória RAM Instalada** | Número (GB) | Condicional | Capacidade total de RAM em Gigabytes (Ex: `16`, `32`, `128`). Coletado via Discovery. | Discovery / TI |
+| **Armazenamento Principal** | Texto Curto | Condicional | Capacidade e tipo de disco (Ex: `512 GB SSD NVMe`, `2 TB SAS 10K`). Coletado via Discovery. | Discovery / TI |
+| **Sistema Operacional** | Dropdown | Condicional | Sistema ativo: `[Windows 11 Pro, RHEL 9, Ubuntu Server 22.04, macOS Sonoma, iOS, Android]`. | Discovery / TI |
+| **Endereço MAC Principal** | Texto (Regex) | **Mandatório** | Formato `XX:XX:XX:XX:XX:XX`. Requerido para controle de acesso à rede (802.1X / DHCP). | Discovery / TI |
+| **Endereço IP Fixo / Hostname** | Texto Curto | Condicional | Obrigatório para ativos de infraestrutura de rede e servidores em produção. | Infraestrutura TI |
+| **Responsável Técnico (Grupo)** | Link Interno | **Mandatório** | Vinculação ao grupo de suporte responsável (Ex: `Suporte Local - DF`, `Equipe de Data Center`). | Operação TI |
+| **CIs Relacionados (CMDB)** | Conectores CMDB | Condicional | Mapeamento de dependência no TOPdesk (Ex: `Hospedado em`, `Executa em`, `Conectado a`). | Arquiteto CMDB |
+
+### Aba 3: Financeira, Contratual & Suprimentos (HAM)
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Número da Nota Fiscal (NF)** | Texto Curto | **Mandatório** | Número do documento fiscal de entrada do bem na instituição. | Compras / Patrimônio |
+| **Data de Emissão da NF** | Data | **Mandatório** | Data oficial de faturamento do ativo. | Compras |
+| **Valor de Aquisição (R$)** | Moeda (BRL) | **Mandatório** | Valor unitário de compra constante na Nota Fiscal. | Compras / Controladoria |
+| **Fornecedor / Razão Social** | Link / Dropdown | **Mandatório** | Cadastro do fornecedor vencedor da licitação/contrato (CNPJ). | Compras |
+| **Código do Contrato (ITCM)** | Link Interno | **Mandatório** | Relacionamento com o registro do contrato de aquisição/garantia ativo no TOPdesk. | Compras |
+| **Modalidade de Aquisição** | Dropdown | **Mandatório** | Valores: `[Compra Própria, Alugado/Outsourcing, Leasing, Comodato, Doação]`. | Compras |
+| **Data de Vencimento da Garantia** | Data | **Mandatório** | Data limite da cobertura de garantia de fábrica ou suporte do fornecedor. | Compras / TI |
+| **Centro de Custo Financeiro** | Dropdown | **Mandatório** | Código contábil da unidade/projeto pagador para controle financeiro e rateio. | Compras / Patrimônio |
+
+### Aba 4: Custódia, SSP & Compliance LGPD (HAM)
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Usuário Responsável (Custodiante)** | Link Interno | Condicional | Obrigatório quando Estado = "Em Uso". Busca direta na tabela de Pessoas (AD/Entra ID). | Operação TI |
+| **Matrícula / E-mail do Custodiante** | Texto (Somente Leitura) | Condicional | Preenchido automaticamente via integração AD com base no Usuário Responsável. | Sistema |
+| **Status do Termo de Responsabilidade** | Dropdown | **Mandatório (Endpoints)** | Valores: `[Aguardando Aceite no SSP, Aceito Digitalmente, Recusado, Isento/Infra]`. | Operação TI / Action Seq. |
+| **Data/Hora do Aceite no SSP** | Data/Hora | Condicional | Timestamp exato gravado via Action Sequence no momento da confirmação do usuário no SSP. | Action Sequence |
+| **IP do Aceite Digital** | Texto (IP) | Condicional | Registro de IP do usuário para fins de auditabilidade LGPD no Termo de Guarda. | Action Sequence |
+| **Certificado de Sanitização (PDF)** | Upload de Arquivo | Condicional (Descarte) | Anexo de laudo de formatação segura e destruição de dados (ISO 27001) para baixa do bem. | Operação TI / Segurança |
+
+---
+
+## D.2 – Dicionário de Campos Obrigatórios para Ativos de Software & Licenciamento (SAM)
+
+Os softwares instalados (*On-Premise*), subscrições em nuvem (*SaaS*) e softwares de pesquisa científica da Embrapa devem obrigatoriamente registrar os seguintes atributos no TOPdesk:
+
+### Aba 1: Identificação do Software & Licença (SAM)
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Nome Oficial do Software** | Texto Curto | **Mandatório** | Nomenclatura oficial (Ex: `Microsoft 365 Enterprise`, `MATLAB Campus Wide`, `ArcGIS Pro`, `Docker Desktop`). | Governança TI |
+| **Categoria de Software** | Dropdown | **Mandatório** | Seleção: `[Sistema Operacional, Suíte de Escritório, Segurança/EDR, Desenvolvimento, Software de Pesquisa Científica, Banco de Dados, Middleware]`. | Governança TI |
+| **Fabricante / Publisher** | Dropdown / Texto | **Mandatório** | Desenvolvedor homologado: `[Microsoft, MathWorks, ESRI, Oracle, Red Hat, JetBrains, SAS Institute, IBM]`. | Governança TI / SAM |
+| **Versão / Release Homologada** | Texto Curto | **Mandatório** | Versão ou edição contratada (Ex: `2024.1`, `Enterprise Edition`, `Standard`, `Pro`). | Operação TI / SAM |
+| **Estado do Licenciamento** | Dropdown | **Mandatório** | Valores: `[Ativo, Em Renovação, Expirado, Descontinuado, Sublicenciado]`. | Gestão de Licenças / SAM |
+| **Criticidade para a Operação/Pesquisa** | Dropdown | **Mandatório** | Classificação de impacto no negócio/pesquisa: `[Baixa, Média, Alta, Crítica]`. | Governança TI |
+
+### Aba 2: Métricas de Licenciamento & Instalações (SAM)
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Modelo de Licenciamento** | Dropdown | **Mandatório** | Valores: `[Nomeada/Por Usuário, Concorrente/Floating, Por Core/CPU, Por Dispositivo/Node-Locked, Assento SaaS, Licença Acadêmica/Pesquisa]`. | Gestão de Licenças / SAM |
+| **Métrica de Cobrança** | Dropdown | **Mandatório** | Valores: `[Mensal (Subscrição), Anual (Subscrição), Perpétua com Manutenção, Consumo por Utilização]`. | Compras / SAM |
+| **Quantidade Contratada / Adquirida** | Número Inteiro | **Mandatório** | Total exato de licenças ou assentos adquiridos conforme o contrato amparador. | Compras / SAM |
+| **Quantidade de Instalações / Alocações Ativas** | Número Inteiro | **Mandatório** | Total de licenças efetivamente em uso. Sincronizado mensalmente via Intune/Discovery ou API SaaS. | Discovery / SAM |
+| **Licenças Disponíveis em Estoque** | Número (Calculado) | **Mandatório** | Campo de fórmula: `[Quantidade Contratada] - [Quantidade Ativa]`. Mede ociosidade. | Sistema (Fórmula) |
+| **Chave de Ativação / License Key / Tenant ID** | Texto (Criptografado) | Condicional | Chave de registro ou ID do Tenant SaaS. Visibilidade restrita aos Administradores SAM. | Gestão de Licenças |
+| **Servidor de Licenças (License Host)** | Texto / Link | Condicional | Obrigatório para licenças concorrentes (*floating*): Hostname ou IP do servidor FlexLM/RLM. | Operação TI |
+
+### Aba 3: Financeira, Contratual & Governança (SAM)
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Contrato Vinculado (ITCM)** | Link Interno | **Mandatório** | Relacionamento direto com o registro do Contrato de Licenciamento ativo no TOPdesk. | Compras |
+| **Fornecedor / Revendedor Homologado** | Link / Dropdown | **Mandatório** | Razão Social do parceiro comercial fornecedor das chaves ou subscrições. | Compras |
+| **Data de Ativação da Licença** | Data | **Mandatório** | Data inicial de concessão do direito de uso. | Compras / SAM |
+| **Data de Expiração / Renovação** | Data | Condicional | Obrigatório para subscrições e licenças com prazo determinado. Alerta automático aos 120 dias. | Compras / SAM |
+| **Valor Total do Licenciamento (R$)** | Moeda (BRL) | **Mandatório** | Custo total do lote ou valor anuidade da subscrição. | Compras |
+| **Centro de Custo Financeiro** | Dropdown | **Mandatório** | Unidade organizacional ou projeto de pesquisa responsável pelo custeio. | Compras / Governança |
+
+### Aba 4: Atribuição, Usuários & Compliance Auditável (SAM)
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Unidade / Laboratório Beneficiário** | Dropdown | **Mandatório** | Unidade da Embrapa ou Centro de Pesquisa finalístico que utiliza o software. | Governança TI |
+| **Lista de Usuários / Dispositivos Elegíveis** | Tabela Relacionada | Condicional | Mapeamento de quais pessoas ou computadores possuem direito de uso atribuído. | Operação TI / SAM |
+| **Status de Conformidade (Audit Status)** | Dropdown | **Mandatório** | Resultado da conciliação: `[Em Conformidade, Sublicenciado (Risco), Superlicenciado (Desperdício)]`. | Auditoria ITAM / SAM |
+| **Data da Última Auditoria SAM** | Data | **Mandatório** | Registro do último batimento entre inventário técnico e licenças contratuais. | Gestão de Licenças |
+
+---
+
+## D.3 – Regras de Validação, Nomenclatura e Triggers de Automação no TOPdesk
+
+Para evitar dados inconsistentes e garantir automação eficiente nos fluxos operacionais do TOPdesk, aplicam-se as seguintes regras de validação e automações nativas (*Action Sequences*):
+
+### 1. Padrões Obrigatórios de Nomenclatura (Asset Tags / Primary Keys)
+- **User Endpoints:** `NB-[SEQUENCIAL_5_DIGITOS]` para Notebooks (Ex: `NB-04821`); `DT-[SEQUENCIAL_5_DIGITOS]` para Desktops (Ex: `DT-01293`).
+- **Servidores e Data Center:** `SRV-[SLA/SIGLA]-[SEQ]` (Ex: `SRV-DB-0012`); `STG-[SEQ]` para Storages; `SW-[SEQ]` para Switches.
+- **Licenças de Software:** `SW-LIC-[FABRICANTE]-[SIGLA_PROD]` (Ex: `SW-LIC-MS-M365-PREM`, `SW-LIC-MATH-MATLAB24`).
+
+### 2. Validações por Expressões Regulares (Regex) no TOPdesk
+- **Endereço MAC:** `^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$` (Impede o cadastro de endereços MAC inválidos ou sem formatadores padrão).
+- **Endereço IP IPv4:** `^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.){3}(25[0-5]|(2[0-4]|1\d|[1-9]|)\d)$`
+- **Número de Série (S/N):** `^[A-Za-z0-9\-\_]{5,30}$` (Garante entre 5 e 30 caracteres alfanuméricos sem espaços).
+
+### 3. Automações de Eventos via Action Sequences
+- **Trigger de Confirmação no SSP:** Quando o usuário clica em "Confirmar Aceite" no Termo de Guarda no Portal SSP:
+  - O **Status do Termo** altera para `Aceito Digitalmente`.
+  - A **Data/Hora do Aceite** é preenchida com o timestamp atual.
+  - O **Estado do Ciclo de Vida** do ativo transiciona automaticamente de `Disponível` para `Em Uso`.
+- **Trigger de Manutenção de Ativo:** Quando um chamado de incidente da categoria *Hardware - Defeito Físico* é aberto e associado a um ativo:
+  - O **Estado do Ciclo de Vida** do ativo altera para `Em Manutenção`.
+- **Trigger de Régua de Alertas Contratuais (SAM/ITCM):** Executado diariamente às 06:00:
+  - Dispara notificação à equipe de Compras aos **120, 90, 60 e 30 dias** antes da *Data de Expiração / Renovação* de qualquer licença de software ou garantia de hardware.
