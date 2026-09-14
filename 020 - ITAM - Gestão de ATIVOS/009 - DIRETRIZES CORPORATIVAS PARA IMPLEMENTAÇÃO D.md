@@ -32,10 +32,8 @@
 * * *
 
 ## Distribuição
-* * *
-```
 
-```
+* * *
 
 Este documento destina-se às seguintes áreas:
 
