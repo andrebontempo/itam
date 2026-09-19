@@ -694,52 +694,94 @@ Os ativos de hardware do modelo **Estação de Trabalho** (Desktops e Notebooks)
 
 ---
 
-## D.2 – Dicionário de Campos Obrigatórios para Ativos de Software & Licenciamento (SAM)
+## D.2 – Dicionário de Campos Obrigatórios para Ativos de Software & Licenciamento (Modelo "Licença de Software")
 
-Os softwares instalados (*On-Premise*), subscrições em nuvem (*SaaS*) e softwares especialistas de TI da Embrapa devem obrigatoriamente registrar os seguintes atributos no TOPdesk:
+Os ativos de software do modelo **Licença de Software** (subscrições SaaS, licenças On-Premise e softwares especialistas) são cadastrados no TOPdesk contemplando a seguinte estrutura de seções, campos, relações e documentos:
 
-### Aba 1: Identificação do Software & Licença (SAM)
-
-| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
-| --- | --- | --- | --- | --- |
-| **Nome Oficial do Software** | Texto Curto | **Mandatório** | Nomenclatura oficial (Ex: `Microsoft 365 Enterprise`, `JetBrains All Products Pack`, `Oracle DB Enterprise`, `Docker Desktop`). | Governança TI |
-| **Categoria de Software** | Dropdown | **Mandatório** | Seleção: `[Sistema Operacional, Suíte de Escritório, Segurança/EDR, Desenvolvimento, Software Especialista de TI, Banco de Dados, Middleware]`. | Governança TI |
-| **Fabricante / Publisher** | Dropdown / Texto | **Mandatório** | Desenvolvedor homologado: `[Microsoft, Oracle, Red Hat, JetBrains, VMware, IBM, Cisco]`. | Governança TI / SAM |
-| **Versão / Release Homologada** | Texto Curto | **Mandatório** | Versão ou edição contratada (Ex: `2024.1`, `Enterprise Edition`, `Standard`, `Pro`). | Operação TI / SAM |
-| **Estado do Licenciamento** | Dropdown | **Mandatório** | Valores: `[Ativo, Em Renovação, Expirado, Descontinuado, Sublicenciado]`. | Gestão de Licenças / SAM |
-| **Criticidade para a Operação de TI** | Dropdown | **Mandatório** | Classificação de impacto no negócio: `[Baixa, Média, Alta, Crítica]`. | Governança TI |
-
-### Aba 2: Métricas de Licenciamento & Instalações (SAM)
+### Seção 1: Identificação de Software & Licença
 
 | Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
 | --- | --- | --- | --- | --- |
-| **Modelo de Licenciamento** | Dropdown | **Mandatório** | Valores: `[Nomeada/Por Usuário, Concorrente/Floating, Por Core/CPU, Por Dispositivo/Node-Locked, Assento SaaS, Licença Corporativa]`. | Gestão de Licenças / SAM |
-| **Métrica de Cobrança** | Dropdown | **Mandatório** | Valores: `[Mensal (Subscrição), Anual (Subscrição), Perpétua com Manutenção, Consumo por Utilização]`. | Compras / SAM |
-| **Quantidade Contratada / Adquirida** | Número Inteiro | **Mandatório** | Total exato de licenças ou assentos adquiridos conforme o contrato amparador. | Compras / SAM |
-| **Quantidade de Instalações / Alocações Ativas** | Número Inteiro | **Mandatório** | Total de licenças efetivamente em uso. Sincronizado mensalmente via Intune/Discovery ou API SaaS. | Discovery / SAM |
-| **Licenças Disponíveis em Estoque** | Número (Calculado) | **Mandatório** | Campo de fórmula: `[Quantidade Contratada] - [Quantidade Ativa]`. Mede ociosidade. | Sistema (Fórmula) |
-| **Chave de Ativação / License Key / Tenant ID** | Texto (Criptografado) | Condicional | Chave de registro ou ID do Tenant SaaS. Visibilidade restrita aos Administradores SAM. | Gestão de Licenças |
-| **Servidor de Licenças (License Host)** | Texto / Link | Condicional | Obrigatório para licenças concorrentes (*floating*): Hostname ou IP do servidor de licenças. | Operação TI |
+| **Nome do Software** | Texto Curto | **Mandatório** | Nome comercial do software (Ex: `Microsoft 365 Enterprise`, `Oracle Database`). | Governança TI |
+| **Fabricante** | Dropdown / Texto | **Mandatório** | Desenvolvedor homologado (`Microsoft`, `Oracle`, `Red Hat`, `JetBrains`). | Governança TI / SAM |
+| **Produto** | Texto Curto | **Mandatório** | Família do produto (`Office 365`, `Database Enterprise`, `IntelliJ`). | Governança TI |
+| **Edição** | Dropdown / Texto | **Mandatório** | Edição contratada (`Business Premium`, `E3`, `E5`, `Standard`, `Enterprise`). | Compras / SAM |
+| **Versão** | Texto Curto | **Mandatório** | Versão ou release oficial (`2024.1`, `21c`, `v11.0`). | Operação TI / SAM |
+| **Tipo de Licença** | Dropdown | **Mandatório** | Modelo da licença (`Subscrição SaaS`, `Perpétua`, `Concorrente/Floating`, `OEM`, `Volume`). | SAM / Compras |
+| **ID da Licença** | Texto Curto | **Mandatório** | Identificador da licença ou contrato no portal do fabricante. | Administrador SAM |
+| **Identificador da Licença** | Texto Curto / Key | **Mandatório** | Padrão `SW-LIC-MS-OFFICE-M365` ou Tenant ID / Serial Key. | Administrador SAM |
 
-### Aba 3: Financeira, Contratual & Governança (SAM)
-
-| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
-| --- | --- | --- | --- | --- |
-| **Contrato Vinculado (ITCM)** | Link Interno | **Mandatório** | Relacionamento direto com o registro do Contrato de Licenciamento ativo no TOPdesk. | Compras |
-| **Fornecedor / Revendedor Homologado** | Link / Dropdown | **Mandatório** | Razão Social do parceiro comercial fornecedor das chaves ou subscrições. | Compras |
-| **Data de Ativação da Licença** | Data | **Mandatório** | Data inicial de concessão do direito de uso. | Compras / SAM |
-| **Data de Expiração / Renovação** | Data | Condicional | Obrigatório para subscrições e licenças com prazo determinado. Alerta automático aos 120 dias. | Compras / SAM |
-| **Valor Total do Licenciamento (R$)** | Moeda (BRL) | **Mandatório** | Custo total do lote ou valor anuidade da subscrição. | Compras |
-| **Centro de Custo Financeiro** | Dropdown | **Mandatório** | Unidade organizacional responsável pelo custeio. | Compras / Governança |
-
-### Aba 4: Atribuição, Usuários & Compliance Auditável (SAM)
+### Seção 2: Métricas de Licenciamento & Instalações
 
 | Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
 | --- | --- | --- | --- | --- |
-| **Unidade Organizacional Beneficiária** | Dropdown | **Mandatório** | Unidade da Embrapa que utiliza o software. | Governança TI |
-| **Lista de Usuários / Dispositivos Elegíveis** | Tabela Relacionada | Condicional | Mapeamento de quais pessoas ou computadores possuem direito de uso atribuído. | Operação TI / SAM |
-| **Status de Conformidade (Audit Status)** | Dropdown | **Mandatório** | Resultado da conciliação: `[Em Conformidade, Sublicenciado (Risco), Superlicenciado (Desperdício)]`. | Auditoria ITAM / SAM |
-| **Data da Última Auditoria SAM** | Data | **Mandatório** | Registro do último batimento entre inventário técnico e licenças contratuais. | Gestão de Licenças |
+| **Métrica de Licenciamento** | Dropdown | **Mandatório** | Regra de medição (`Por Usuário/Assento`, `Por Dispositivo/Core`, `Concorrente`). | Gestão de Licenças / SAM |
+| **Quantidade Adquirida** | Número Inteiro | **Mandatório** | Total de licenças compradas constantes no contrato (Ex: `1.500`). | Compras / Contratos |
+| **Quantidade Licenciada** | Número Inteiro | **Mandatório** | Total de licenças efetivamente concedidas e aptas para uso. | SAM / Operação TI |
+| **Quantidade Instalada** | Número Inteiro | **Mandatório** | Total de instâncias/instalações detectadas via Discovery/Intune. | Discovery / Intune |
+| **Quantidade em Uso** | Número Inteiro | **Mandatório** | Assentos ou licenças em utilização ativa pelos colaboradores. | SAM / Discovery |
+| **Quantidade Disponível** | Número (Calculado) | **Mandatório** | Saldo em estoque: `[Qtd Adquirida] - [Qtd em Uso]` (Ex: `160`). Mede ociosidade. | Sistema (Fórmula TOPdesk) |
+| **Data da Primeira Instalação** | Data | Condicional | Timestamp da primeira ativação/instalação no acervo. | Discovery / SAM |
+| **Data da Última Instalação** | Data | Condicional | Timestamp do último provisionamento efetuado. | Discovery / SAM |
+| **Situação do Licenciamento** | Dropdown | **Mandatório** | Estado do licenciamento (`Ativo`, `Em Renovação`, `Expirado`, `Sublicenciado`). | Gestão de Licenças / SAM |
+
+### Seção 3: Financeiro, Contratual & Governança
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Fornecedor** | Link Interno / Dropdown | **Mandatório** | Razão Social do parceiro comercial fornecedor / LSP / CSP (CNPJ). | Compras |
+| **Data de Aquisição** | Data | **Mandatório** | Data oficial da compra ou emissão da fatura. | Compras |
+| **Valor de Aquisição** | Moeda | **Mandatório** | Custo de aquisição do lote ou valor anuidade da subscrição. | Compras / Controladoria |
+| **Moeda** | Dropdown | **Mandatório** | Moeda do contrato (`BRL`, `USD`, `EUR`). | Compras |
+| **Nota Fiscal** | Texto Curto | **Mandatório** | Número do documento fiscal de compra. | Compras / Suprimentos |
+| **Contrato** | Link Interno | **Mandatório** | Associação ao registro do Contrato de Licenciamento (ITCM) no TOPdesk. | Compras |
+| **Pedido de Compra** | Texto Curto | **Mandatório** | Número do Pedido de Compra / Ordem de Serviço (PO). | Compras / Suprimentos |
+| **Centro de Custo** | Dropdown | **Mandatório** | Código contábil da unidade pagadora para rateio financeiro. | Governança TI |
+| **Início da Vigência** | Data | **Mandatório** | Data inicial de concessão do direito de uso ou contrato. | Compras / SAM |
+| **Fim da Vigência** | Data | **Mandatório** | Data limite do contrato SaaS / subscrição (dispara alerta aos 120 dias). | Compras / SAM |
+| **Renovação Automática** | Booleano (Sim/Não) | **Mandatório** | Indica se há renovação automática programada no contrato. | Compras / ITCM |
+| **Custo de Renovação** | Moeda | **Mandatório** | Valor estimativo recorrente da anuidade/renovação. | Compras / Financeiro |
+
+### Seção 4: Atribuição, Uso & Compliance
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Responsável pela Licença** | Link Interno | **Mandatório** | Busca na tabela de Pessoas (Gestor do Software / Admin SAM). | Governança TI |
+| **Unidade** | Link Interno / Dropdown | **Mandatório** | Unidade Embrapa beneficiária do licenciamento. | Governança TI |
+| **Data da Atribuição** | Data | Condicional | Data de alocação da licença ao usuário ou servidor. | Service Desk / SAM |
+| **Ambiente de Aplicação** | Dropdown | **Mandatório** | Escopo de execução (`Produção`, `Homologação`, `Desenvolvimento`). | Operação TI |
+| **Uso Autorizado?** | Booleano (Sim/Não) | **Mandatório** | Confirmação de conformidade de uso institucional. | Segurança da Informação |
+| **Situação do Licenciamento** | Dropdown | **Mandatório** | Diagnóstico operacional (`Ativo`, `Em Renovação`, `Sublicenciado`). | SAM / Auditoria |
+| **Data da Última Auditoria** | Data | **Mandatório** | Timestamp do último batimento entre inventário e contratos. | Gestão de Licenças / SAM |
+| **Situação de Compliance** | Dropdown | **Mandatório** | Diagnóstico final (`Em Conformidade`, `Sublicenciado (Risco)`, `Superlicenciado (Desperdício)`). | Auditoria ITAM |
+| **Observações** | Área de Texto | Condicional | Notas técnicas, exceções de licenciamento ou ressalvas de audit. | SAM / Compliance |
+
+### Seção 5: Grade de Relações
+
+| Entidade Relacionada | Tipo de Vínculo | Obrigatoriedade | Regra de Negócio / Descrição |
+| --- | --- | --- | --- |
+| **Usuário** | Link de Entidade | **Mandatório** | Vínculo com a entidade Pessoa/Usuário com licença atribuída. |
+| **Estação de Trabalho** | Link de Entidade | Condicional | Vínculo com estações de trabalho que possuem o software instalado. |
+| **Servidor** | Link de Entidade | Condicional | Vínculo com servidores de aplicação onde o software executa. |
+| **Pessoas** | Link de Entidade | Condicional | Vínculo com lista de colaboradores/grupos elegíveis. |
+| **Contrato** | Link de Entidade | **Mandatório** | Associação com os Contratos de TI amparadores. |
+| **Chamado** | Link de Entidade | Condicional | Histórico de chamados de suporte/requisições vinculados. |
+
+### Seção 6: Documentos (Anexos Comprobatórios)
+
+| Tipo de Documento | Formato de Arquivo | Obrigatoriedade | Descrição / Finalidade |
+| --- | --- | --- | --- |
+| **Estatuto** | Upload (PDF) | Condicional | Termos de uso, regulamento interno ou política do produto. |
+| **Proposta Comercial** | Upload (PDF) | **Mandatório** | Cópia da proposta comercial homologada da contratação. |
+| **Pedido de Compra** | Upload (PDF) | **Mandatório** | Cópia da ordem/pedido de compra emitido (PO). |
+| **Nota Fiscal** | Upload (PDF/Imagem) | **Mandatório** | Cópia do documento fiscal de faturamento da licença. |
+| **Certificado de Licença** | Upload (PDF) | **Mandatório** | Certificado oficial de licença (*License Certificate*). |
+| **Comprovante de Aquisição** | Upload (PDF) | Condicional | Comprovantes de faturamento ou quitação de liquidação. |
+| **Termo de Licenciamento** | Upload (PDF) | **Mandatório** | EULA / Contrato de Licença de Usuário Final do fabricante. |
+| **Evidência de Auditoria** | Upload (PDF) | Condicional | Relatório de conciliação ou laudo de auditoria de conformidade. |
+| **Documentação do Fabricante** | Upload (PDF) | Condicional | Manual de métricas, datasheets ou guia de licenciamento. |
+| **Comprovante de Renovação** | Upload (PDF) | Condicional | Aditivo de renovação ou comprovante de vigência estendida. |
+
 
 ---
 
