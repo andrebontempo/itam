@@ -12,7 +12,7 @@
 | Projeto | Implantação do IT Asset Management (ITAM) no TOPdesk |
 | Ferramenta | TOPdesk Asset Management (Módulo Flexível de Ativos) |
 | Data de Emissão | 08/07/2026 |
-| Última Revisão | 14/09/2026 |
+| Última Revisão | 18/09/2026 |
 | Próxima Revisão | Setembro / 2027 |
 | Classificação | Uso Interno |
 | Aprovador | *(preencher)* |
@@ -29,6 +29,7 @@
 | 3.0 | 29/07/2026 | André Luiz Bontempo / Antigravity | Revisão conceitual focada em ITIL v4: co-criação de valor e Quatro Dimensões; refinamento do pilar Cloud/FinOps; integração operacional de incidentes e requisições; automatização por Action Sequences; Termo no SSP e LGPD. |
 | 4.0 | 14/09/2026 | André Luiz Bontempo / Antigravity | Revisão geral de governança e especificação funcional exaustiva dos Campos Obrigatórios no TOPdesk para Hardware (HAM) e Software (SAM), categorizados por abas. |
 | 5.0 | 14/09/2026 | André Luiz Bontempo / Antigravity | Adequação estrita do escopo para Ativos de Tecnologia da Informação (TI), removendo visões e contextualizações de pesquisa agropecuária, biotecnologia e inovação no campo, focando exclusivamente na gestão corporativa de TI. |
+| 6.0 | 18/09/2026 | André Luiz Bontempo / Antigravity | Alinhamento da taxonomia de classes (Apêndice C) e do Dicionário de Dados do modelo 'Estação de Trabalho' (Apêndice D.1) com a implementação no TOPdesk Designer de Modelo, incorporando as 6 seções funcionais (Identificação, Especificações Técnicas & CMDB, Financeiro/Contratual, Custódia/Compliance, Grade de Relações e Documentos). |
 
 * * *
 
@@ -181,18 +182,18 @@ Cada pilar possui objetivos próprios, regras de categorização e indicadores e
 
 > [!IMPORTANT]
 > **Requisito Cadastral no TOPdesk (HAM):**
-> Todo ativo físico deve ter seu **Cartão de Ativo** preenchido obrigatoriamente conforme o **Dicionário de Campos de Hardware (Apêndice D.1)**. A ausência de preenchimento dos campos obrigatórios (como Número de Série, Patrimônio e Centro de Custo) bloqueará a disponibilização do equipamento no catálogo de serviços do Service Desk.
+> Todo ativo físico deve ter seu **Cartão de Ativo** cadastrado no modelo **Estação de Trabalho** (ou demais modelos de Hardware) preenchido obrigatoriamente conforme o **Dicionário de Campos de Hardware (Apêndice D.1)**. A ausência de preenchimento dos campos obrigatórios (como Número de Série, Patrimônio e Centro de Custo) bloqueará a disponibilização do equipamento no catálogo de serviços do Service Desk.
 
 ### Exemplos de Registro no Sistema
-- **Exemplo 1 – User Endpoints**
-  - **Patrimônio:** PAT-2026-0894 | **Ativo:** Notebook Dell Latitude 3440
-  - **Configuração:** Intel Core i5, 16 GB RAM, SSD 512 GB | **Status:** Em uso | **Responsável:** André Luiz Bontempo
-- **Exemplo 2 – Infraestrutura**
-  - **Patrimônio:** SRV-0042 | **Ativo:** Servidor HPE ProLiant DL380 Gen10
+- **Exemplo 1 – User Endpoints (Estação de Trabalho)**
+  - **Patrimônio:** PAT-2026-0894 | **Modelo:** Estação de Trabalho (Notebook Dell Latitude 3440)
+  - **Configuração:** Intel Core i5, 16 GB RAM, SSD 512 GB | **Status:** Em Uso | **Responsável:** André Luiz Bontempo
+- **Exemplo 2 – Infraestrutura (Servidor)**
+  - **Patrimônio:** SRV-0042 | **Modelo:** Servidor (HPE ProLiant DL380 Gen10)
   - **Status:** Em Produção | **Localização:** Data Center Principal – Rack 04
 - **Exemplo 3 – Periféricos / Reserva**
-  - **Patrimônio:** NOB-0115 | **Ativo:** Nobreak APC Smart-UPS BR 1500 VA
-  - **Status:** Reserva Técnica | **Localização:** Estoque Central TI
+  - **Patrimônio:** NOB-0115 | **Modelo:** Periférico (Nobreak APC Smart-UPS BR 1500 VA)
+  - **Status:** Em Estoque | **Localização:** Estoque Central TI
 
 * * *
 
@@ -303,9 +304,9 @@ Para evitar confusões operacionais comuns, o programa estabelece uma clara linh
 | **Visão de Negócio** | Ênfase em Custos, Contratos, Auditoria e ROI. | Ênfase em Operação, Incidentes, Mudanças e SLA. |
 
 ### 7.1.1 Consolidação Prática no TOPdesk: Abas e Controle de Acesso
-Apesar das divisões conceituais, os universos de ITAM e CMDB consolidam-se no mesmo **Cartão de Ativo** dentro do TOPdesk. Esta arquitetura evita duplicidade de dados e silos de informação. A separação dos perfis se dá por meio de **Abas de Cadastro** com controle rígido de acesso:
-- **Aba Operacional (CMDB):** Visível e editável para as equipes de Suporte, Service Desk e Infraestrutura. Registra informações como número de série, endereço IP, MAC, sistema operacional, versão do software e dependências técnicas na topologia do serviço.
-- **Aba Financeira / Administrativa (ITAM):** Visível apenas para perfis de Governança de TI, Compras e Controladoria/Patrimônio. Contém dados de Nota Fiscal, valor de aquisição, depreciação acumulada, fornecedor e contrato de suporte amarrado.
+Apesar das divisões conceituais, os universos de ITAM e CMDB consolidam-se no mesmo **Cartão de Ativo** dentro do TOPdesk. Esta arquitetura evita duplicidade de dados e silos de informação. A separação dos perfis se dá por meio de **Blocos de Cadastro** com controle rígido de acesso:
+- **Bloco Operacional / Especificações Técnicas & CMDB:** Visível e editável para as equipes de Suporte, Service Desk e Infraestrutura. Registra informações como número de série, endereço IP, MAC, sistema operacional, versão do software e dependências técnicas na topologia do serviço.
+- **Bloco Financeiro, Contratual & Suprimentos:** Visível apenas para perfis de Governança de TI, Compras e Controladoria/Patrimônio. Contém dados de Nota Fiscal, valor de aquisição, depreciação acumulada, fornecedor e contrato de suporte amarrado.
 
 * * *
 
@@ -351,7 +352,7 @@ Para manter a consistência da árvore de serviços, a CMDB utilizará exclusiva
 
 ## 7.4 Benefícios da Integração Operacional com Módulos Operantes (Incidentes e Requisições)
 
-Considerando que a Embrapa já tem consolidado o uso do TOPdesk para a **Gestão de Incidentes** e **Requisição de Serviços**, a ativação da CMDB e ITAM potencializará a operation da seguinte forma:
+Considerando que a Embrapa já tem consolidado o uso do TOPdesk para a **Gestão de Incidentes** e **Requisição de Serviços**, a ativação da CMDB e ITAM potencializará a operação da seguinte forma:
 
 - **Vinculação Obrigatória em Incidentes:** Todos os chamados de incidentes abertos, tanto na interface dos analistas de Service Desk quanto na abertura pelo Portal de Autoatendimento (SSP) do usuário final, deverão obrigatoriamente ter o Ativo/CI impactado selecionado.
 - **Identificação de Ativos Problemáticos ("Limões"):** O TOPdesk consolidará no Cartão de Ativo todo o histórico de chamados abertos vinculados a ele. Isso possibilita à TI a visualização rápida e geração de relatórios de equipamentos com recorrência crítica de falhas, acelerando a tomada de decisão para manutenção corretiva especializada ou aceleração de sua substituição programada (*Hardware Refresh*).
@@ -380,7 +381,7 @@ Todo ativo controlado pelo programa deve percorrer obrigatoriamente as fases est
    - *Estados:* Em Preparação, Disponível.
 5. **Operação:** Período ativo de uso do equipamento.
    - *Estados:* Em Uso, Em Produção, Reserva Técnica (Estoque TI), Em Empréstimo.
-6. **Manutenção:** Intervenções preventivas ou corretivas durantes a vida útil do bem.
+6. **Manutenção:** Intervenções preventivas ou corretivas durante a vida útil do bem.
    - *Estados:* Em Garantia, Em Manutenção, Aguardando Peças de Reposição.
 7. **Renovação Tecnológica (*Refresh*):** Substituição programada do hardware por critérios técnicos objetivos: obsolescência severa, custo de manutenção corretiva superior ao valor residual, encerramento de suporte do fabricante (*End of Support - EOS*) ou degradação severa de performance que prejudique a produtividade.
 8. **Encerramento e Descarte:** Fim da vida útil corporativa do ativo. Realiza-se a formatação segura de dados (sanitização física/apagamento seguro de discos conforme normas ISO 27001), desvinculação de licenças do SAM, baixa contábil e destinação para descarte ecologicamente correto com emissão obrigatória do Certificado de Destruição Ambiental pelo parceiro homologado.
@@ -485,7 +486,7 @@ A integridade do programa ITAM reside na confiabilidade de suas informações. D
 ## 10.3 Adequação à Lei Geral de Proteção de Dados (LGPD)
 Dado que os Cartões de Ativos registram a custódia física e de uso de dispositivos associando-os a colaboradores (Nome, E-mail, Matrícula), estabelecem-se as seguintes regras de proteção de dados pessoais:
 - **Retenção de Histórico de Custódia:** O histórico de quem usou cada ativo de hardware é considerado de interesse legítimo e segurança da informação da empresa, devendo ser mantido para rastreabilidade de acessos à rede corporativa por períodos legais.
-- **Restrição de Acesso:** As abas que armazenam o histórico de custódia e proprietários antigos dos ativos serão de visibilidade restrita, acessíveis exclusivamente aos perfis de "Administrador de ITAM" e "Segurança da Informação", sendo ocultadas para analistas de nível 1 do Service Desk comum.
+- **Restrição de Acesso:** As abas e blocos que armazenam o histórico de custódia e proprietários antigos dos ativos serão de visibilidade restrita, acessíveis exclusivamente aos perfis de "Administrador de ITAM" e "Segurança da Informação", sendo ocultadas para analistas de nível 1 do Service Desk comum.
 - **Anonimização no Descarte:** No momento em que o ativo for desativado e encaminhado para descarte físico ambiental definitivo, o processo de baixa desvinculará e anonimizará a associação direta de dados pessoais dos cartões históricos, mantendo os logs operacionais limpos de identificadores pessoais diretos.
 
 * * *
@@ -586,27 +587,21 @@ A matriz abaixo define as responsabilidades funcionais para cada atividade crít
 
 # APÊNDICE C – MODELO DE CLASSES DO TOPDESK ASSET MANAGEMENT
 
-Para a parametrização inicial do módulo de novos ativos do TOPdesk, a estrutura lógica de objetos e heranças respeitará o seguinte desenho de taxonomia:
+Para a parametrização no Designer de Modelo do TOPdesk Asset Management, a estrutura lógica de objetos respeita a seguinte taxonomia cadastrada no sistema:
 
-### 1. Classe Principal: Ativos de Hardware (HAM)
-- **Tipo de Ativo (Asset Type):** User Endpoints
-  - *Templates:* Notebook, Desktop, Tablet, Smartphone.
-- **Tipo de Ativo (Asset Type):** Infraestrutura de Data Center
-  - *Templates:* Servidor Físico, Storage, Appliance, Switch Core, Firewall.
-- **Tipo de Ativo (Asset Type):** Periféricos e Acessórios
-  - *Templates:* Monitor, Impressora Térmica, Nobreak, Dock Station.
+### 1. Modelos sob a Classe "Ativo"
+- **Equipamento de Rede:** Switches, Roteadores, Firewalls, Access Points, Appliances de Rede.
+- **Estação de Trabalho:** Desktops e Notebooks corporativos (HAM - User Endpoints).
+- **Licença de Software:** Licenciamento On-Premise, subscrições SaaS, licenças corporativas (SAM).
+- **Monitor:** Monitores individuais acoplados ou em estoque.
+- **Periférico:** Nobreaks, Impressoras, Scanners, Dock Stations, Acessórios.
+- **Servidor:** Servidores físicos, Storages e chassis de Data Center.
 
-### 2. Classe Principal: Ativos de Software e Nuvem (SAM & Cloud)
-- **Tipo de Ativo (Asset Type):** Licenciamento On-Premise
-  - *Templates:* Banco de Dados (Instância Local), Sistema Operacional Servidor, Softwares Especialistas de TI.
-- **Tipo de Ativo (Asset Type):** Subscrições SaaS
-  - *Templates:* Conta M365, Assento GitHub Enterprise, Licença Salesforce.
-- **Tipo de Ativo (Asset Type):** Componentes de Nuvem (CIs de Governança)
-  - *Templates:* Instância de Computação (IaaS), Cluster Kubernetes, Bucket de Armazenamento, Conta de API comercial.
+### 2. Modelos sob a Classe "Bem em massa"
+- **Criar modelo de ativo em massa:** Cadastros e importações parametrizadas de itens de lote/massa.
 
 ### 3. Classe Principal: Contratos e Fornecedores (ITCM)
-- **Tipo de Ativo (Asset Type):** Contratos de TI
-  - *Templates:* Contrato de Suporte Fabricante, Contrato de Link de Dados, Contrato de Licenciamento (Software), NDA.
+- **Contratos de TI:** Contratos de Suporte do Fabricante, Garantias, Links de Dados, Licenciamento de Software, NDAs.
 
 * * *
 
@@ -614,66 +609,88 @@ Para a parametrização inicial do módulo de novos ativos do TOPdesk, a estrutu
 
 Este dicionário serve como especificação funcional e normativa para a parametrização dos formulários cadastrais no módulo de **Asset Management** do TOPdesk. 
 
-Para assegurar a governança, integridade e conformidade com a LGPD e ITIL® 4, a exibição dos campos é organizada por **Abas de Cadastro** com permissões diferenciadas de edição e visualização.
 
----
+## D.1 – Dicionário de Campos Obrigatórios para Ativos de Hardware (Modelo "Estação de Trabalho")
 
-## D.1 – Dicionário de Campos Obrigatórios para Ativos de Hardware (HAM)
+Os ativos de hardware do modelo **Estação de Trabalho** (Desktops e Notebooks) são cadastrados no TOPdesk contemplando a seguinte estrutura de seções, campos, relações e documentos:
 
-Os ativos físicos de TI (User Endpoints, Infraestrutura de Data Center, Equipamentos de Telecomunicações e Periféricos) devem ser cadastrados contemplando rigorosamente a seguinte estrutura de atributos:
-
-### Aba 1: Informações Gerais & Identificação (HAM)
+### Seção 1: Identificação & informações gerais
 
 | Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
 | --- | --- | --- | --- | --- |
-| **Identificador Único (Asset Tag)** | Texto Curto | **Mandatório** | Padrão `[Sigla]-[Sequencial]` (Ex: `NB-0894`, `SRV-0042`). Chave primária. | Operação TI / Inventário |
-| **Categoria de Ativo (Asset Type)** | Dropdown | **Mandatório** | Seleção fixa: `[User Endpoints, Infraestrutura, Telecom, Periféricos/Reserva]`. | Operação TI |
-| **Subtipo / Template** | Dropdown | **Mandatório** | Valores: `[Notebook, Desktop, Tablet, Smartphone, Servidor Físico, Storage, Switch, Firewall, Nobreak, Impressora]`. | Operação TI |
-| **Número de Patrimônio** | Alfanumérico | **Mandatório** | Número gravado na etiqueta física de metal colada no equipamento. | Controladoria / Patrimônio |
-| **Estado do Ciclo de Vida** | Dropdown | **Mandatório** | Valores: `[Planejado, Em Estoque, Em Uso, Em Manutenção, Em Descarte, Desativado]`. | Operação TI |
-| **Criticidade do Ativo** | Dropdown | **Mandatório** | Classificação: `[Baixa, Média, Alta, Crítica (Missão Crítica)]`. | Governança TI |
-| **Unidade / Lotação Geográfica** | Dropdown / Link | **Mandatório** | Seleção da Unidade Embrapa (Ex: `Embrapa Sede`, `Embrapa Agrobiologia`, `Data Center Prédio Central`). | Operação TI |
-| **Localização Física Detalhada** | Texto Curto | Condicional | Obrigatório para Data Center/Infraestrutura: `[Bloco B - Sala 102 - Rack 04 - U12]`. | Infraestrutura TI |
+| **Hostname** | Texto Curto | **Mandatório** | Nome do dispositivo na rede (Ex: `DESKTOP-EMB01`, `NB-ANDRE`). | Operação TI / Discovery |
+| **Tipo de Equipamento** | Dropdown | **Mandatório** | Tipo de ativo: `[Desktop, Notebook]`. | Operação TI |
+| **Marca** | Dropdown | **Mandatório** | Catálogo homologado: `[Dell, Lenovo, HP, Apple, Positivo]`. | Operação TI |
+| **Modelo Comercial** | Texto Curto | **Mandatório** | Modelo exato do equipamento (Ex: `Latitude 3440`, `OptiPlex 7010`). | Operação TI |
+| **Número de Série** | Texto Curto | **Mandatório** | Código de série exclusivo da BIOS do fabricante (Ex: `5CD2348XYZ`). | Discovery / TI |
+| **Patrimônio** | Alfanumérico | **Mandatório** | Número gravado na etiqueta física de metal (Ex: `PAT-2026-0894`). | Controladoria / Patrimônio |
+| **Status** | Dropdown | **Mandatório** | Ciclo de vida: `[Planejado, Em Estoque, Em Uso, Em Manutenção, Em Descarte, Desativado]`. | Operação TI / Service Desk |
 
-### Aba 2: Especificações Técnicas & CMDB (HAM)
-
-| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
-| --- | --- | --- | --- | --- |
-| **Número de Série (S/N)** | Texto Curto | **Mandatório** | Código de série exclusivo gravado na BIOS/placa-mãe pelo fabricante. | Operação TI / Discovery |
-| **Fabricante / Marca** | Dropdown / Texto | **Mandatório** | Catálogo homologado: `[Dell, Lenovo, HPE, Cisco, Aruba, Apple, Samsung, APC, Zebra]`. | Operação TI |
-| **Modelo Comercial** | Texto Curto | **Mandatório** | Modelo exato do equipamento (Ex: `Latitude 3440`, `ProLiant DL380 Gen10`). | Operação TI |
-| **Processador / vCPU** | Texto Curto | Condicional | Obrigatório para endpoints e servidores (Ex: `Intel Core i7-13700H`, `AMD EPYC 7763`). Coletado via Discovery. | Discovery / TI |
-| **Memória RAM Instalada** | Número (GB) | Condicional | Capacidade total de RAM em Gigabytes (Ex: `16`, `32`, `128`). Coletado via Discovery. | Discovery / TI |
-| **Armazenamento Principal** | Texto Curto | Condicional | Capacidade e tipo de disco (Ex: `512 GB SSD NVMe`, `2 TB SAS 10K`). Coletado via Discovery. | Discovery / TI |
-| **Sistema Operacional** | Dropdown | Condicional | Sistema ativo: `[Windows 11 Pro, RHEL 9, Ubuntu Server 22.04, macOS Sonoma, iOS, Android]`. | Discovery / TI |
-| **Endereço MAC Principal** | Texto (Regex) | **Mandatório** | Formato `XX:XX:XX:XX:XX:XX`. Requerido para controle de acesso à rede (802.1X / DHCP). | Discovery / TI |
-| **Endereço IP Fixo / Hostname** | Texto Curto | Condicional | Obrigatório para ativos de infraestrutura de rede e servidores em produção. | Infraestrutura TI |
-| **Responsável Técnico (Grupo)** | Link Interno | **Mandatório** | Vinculação ao grupo de suporte responsável (Ex: `Suporte Local - DF`, `Equipe de Data Center`). | Operação TI |
-| **CIs Relacionados (CMDB)** | Conectores CMDB | Condicional | Mapeamento de dependência no TOPdesk (Ex: `Hospedado em`, `Executa em`, `Conectado a`). | Arquiteto CMDB |
-
-### Aba 3: Financeira, Contratual & Suprimentos (HAM)
+### Seção 2: Especificações Técnicas & CMDB
 
 | Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
 | --- | --- | --- | --- | --- |
-| **Número da Nota Fiscal (NF)** | Texto Curto | **Mandatório** | Número do documento fiscal de entrada do bem na instituição. | Compras / Patrimônio |
-| **Data de Emissão da NF** | Data | **Mandatório** | Data oficial de faturamento do ativo. | Compras |
-| **Valor de Aquisição (R$)** | Moeda (BRL) | **Mandatório** | Valor unitário de compra constante na Nota Fiscal. | Compras / Controladoria |
-| **Fornecedor / Razão Social** | Link / Dropdown | **Mandatório** | Cadastro do fornecedor vencedor da licitação/contrato (CNPJ). | Compras |
-| **Código do Contrato (ITCM)** | Link Interno | **Mandatório** | Relacionamento com o registro do contrato de aquisição/garantia ativo no TOPdesk. | Compras |
-| **Modalidade de Aquisição** | Dropdown | **Mandatório** | Valores: `[Compra Própria, Alugado/Outsourcing, Leasing, Comodato, Doação]`. | Compras |
-| **Data de Vencimento da Garantia** | Data | **Mandatório** | Data limite da cobertura de garantia de fábrica ou suporte do fornecedor. | Compras / TI |
-| **Centro de Custo Financeiro** | Dropdown | **Mandatório** | Código contábil da unidade/projeto pagador para controle financeiro e rateio. | Compras / Patrimônio |
+| **Memória RAM** | Texto Curto / Número | **Mandatório** | Capacidade total de RAM em GB (Ex: `8 GB`, `16 GB`, `32 GB`). | Discovery / TI |
+| **Processador** | Texto Curto | **Mandatório** | Modelo da CPU (Ex: `Intel Core i5-1345U`, `AMD Ryzen 5 PRO`). | Discovery / TI |
+| **Armazenamento** | Texto Curto | **Mandatório** | Capacidade e tipo de disco (Ex: `512 GB SSD NVMe`). | Discovery / TI |
+| **Sistema Operacional** | Dropdown | **Mandatório** | Sistema ativo: `[Windows 11 Pro, Linux RHEL, macOS]`. | Discovery / TI |
+| **Versão do SO** | Texto Curto | **Mandatório** | Versão ou build do SO (Ex: `23H2`, `22.04 LTS`). | Discovery / TI |
+| **IP** | Texto (Regex) | Condicional | Endereço IP IPv4/v6 atribuído (Ex: `10.20.4.15`). | Discovery / Infra |
+| **MAC** | Texto (Regex) | **Mandatório** | Formato `XX:XX:XX:XX:XX:XX`. Requerido para controle 802.1X / DHCP. | Discovery / TI |
+| **OU - Unidade Organizacional** | Texto Curto / Dropdown | **Mandatório** | Caminho da OU no AD / Entra ID (Ex: `OU=Desktops,OU=Sede,DC=embrapa,DC=br`). | Diretório ID / TI |
 
-### Aba 4: Custódia, SSP & Compliance LGPD (HAM)
+### Seção 3: Financeiro, Contratual & Suprimentos
 
 | Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
 | --- | --- | --- | --- | --- |
-| **Usuário Responsável (Custodiante)** | Link Interno | Condicional | Obrigatório quando Estado = "Em Uso". Busca direta na tabela de Pessoas (AD/Entra ID). | Operação TI |
-| **Matrícula / E-mail do Custodiante** | Texto (Somente Leitura) | Condicional | Preenchido automaticamente via integração AD com base no Usuário Responsável. | Sistema |
-| **Status do Termo de Responsabilidade** | Dropdown | **Mandatório (Endpoints)** | Valores: `[Aguardando Aceite no SSP, Aceito Digitalmente, Recusado, Isento/Infra]`. | Operação TI / Action Seq. |
-| **Data/Hora do Aceite no SSP** | Data/Hora | Condicional | Timestamp exato gravado via Action Sequence no momento da confirmação do usuário no SSP. | Action Sequence |
-| **IP do Aceite Digital** | Texto (IP) | Condicional | Registro de IP do usuário para fins de auditabilidade LGPD no Termo de Guarda. | Action Sequence |
-| **Certificado de Sanitização (PDF)** | Upload de Arquivo | Condicional (Descarte) | Anexo de laudo de formatação segura e destruição de dados (ISO 27001) para baixa do bem. | Operação TI / Segurança |
+| **Fornecedor** | Link Interno / Dropdown | **Mandatório** | Razão Social do fornecedor cadastrado (CNPJ). | Compras |
+| **Data de Aquisição** | Data | **Mandatório** | Data oficial de entrada/faturamento do ativo. | Compras |
+| **Valor de Aquisição** | Moeda (BRL) | **Mandatório** | Valor unitário de compra constante na Nota Fiscal. | Compras / Controladoria |
+| **Nota Fiscal** | Texto Curto | **Mandatório** | Número do documento fiscal de entrada. | Compras / Suprimentos |
+| **Contrato** | Link Interno | **Mandatório** | Relacionamento com o contrato de aquisição/garantia (ITCM). | Compras |
+| **Início da Garantia** | Data | **Mandatório** | Data inicial da garantia do fabricante. | Compras / TI |
+| **Fim da Garantia** | Data | **Mandatório** | Data de término do suporte/garantia do fabricante (Ex: Dell ProSupport). | Compras / TI |
+| **Centro de Custo** | Dropdown | **Mandatório** | Código contábil pagador para rateio corporativo. | Compras / Governança |
+| **Data Prevista de Descarte** | Data | Condicional | Data planejada para desativação e substituição tecnológica (*Hardware Refresh*). | Governança TI |
+
+### Seção 4: Custódia, Segurança & Compliance
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Responsável pelo Ativo** | Link Interno | Condicional | Busca direta na tabela de Pessoas (Mandatório se Status = `Em Uso`). | Service Desk / TI |
+| **Unidade** | Link Interno / Dropdown | **Mandatório** | Unidade da Embrapa (Ex: `Embrapa Sede`, `Embrapa Agrobiologia`). | Operação TI |
+| **Localização** | Texto Curto / Dropdown | **Mandatório** | Detalhamento físico da alocação (Ex: `Prédio Central - Sala 102`). | Operação TI |
+| **Data da Entrega** | Data | Condicional | Data de entrega efetiva do ativo ao colaborador. | Service Desk / TI |
+| **Termo de Responsabilidade** | Dropdown | **Mandatório** | Status do termo: `[Aguardando Aceite no SSP, Aceito Digitalmente, Isento/Infra]`. | Action Sequence / SSP |
+| **Situação da Custódia** | Dropdown | **Mandatório** | Diagnóstico de posse: `[Regular, Pendente de Aceite, Extraviado, Em Devolução]`. | Governança TI |
+| **Classificação da Informação** | Dropdown | **Mandatório** | Grau de sigilo dos dados manipulados: `[Pública, Interna, Confidencial, Restrita]`. | Segurança da Informação |
+| **Dados Pessoais Tratados?** | Booleano (Sim/Não) | **Mandatório** | Indica tratamento de dados pessoais conforme LGPD. | Segurança / Compliance |
+| **Situação de Compliance** | Dropdown | **Mandatório** | Diagnóstico de conformidade: `[Em Conformidade, Não Conforme, Em Auditoria]`. | Segurança / Compliance |
+| **Data da Última Avaliação** | Data | Condicional | Data da última verificação ou auditoria de conformidade de segurança. | Segurança / Audit |
+
+### Seção 5: Grade de Relações
+
+| Entidade Relacionada | Tipo de Vínculo | Obrigatoriedade | Regra de Negócio / Descrição |
+| --- | --- | --- | --- |
+| **Usuário** | Link de Entidade | **Mandatório** | Vínculo direto com o colaborador (Pessoa) custodiante. |
+| **Localização** | Link de Entidade | **Mandatório** | Vínculo com a estrutura de localização física. |
+| **Software** | Link de Entidade | Condicional | Vínculo com licenças e softwares instalados/alocados. |
+| **Chamado** | Link de Entidade | Condicional | Histórico de Incidentes e Requisições vinculados ao equipamento. |
+| **Contrato** | Link de Entidade | **Mandatório** | Vínculo com Contratos de TI amparadores. |
+| **Monitor** | Link de Entidade | Condicional | Vínculo com monitores individuais acoplados à estação. |
+| **Impressora** | Link de Entidade | Condicional | Vínculo com impressoras alocadas ou mapeadas. |
+
+### Seção 6: Documentos (Anexos Comprobatórios)
+
+| Tipo de Documento | Formato de Arquivo | Obrigatoriedade | Descrição / Finalidade |
+| --- | --- | --- | --- |
+| **Nota Fiscal** | Upload (PDF/Imagem) | **Mandatório** | Documento fiscal de faturamento de aquisição. |
+| **Termo de Responsabilidade** | Upload (PDF/Doc) | Condicional | Termo assinado fisicamente (caso não seja via SSP). |
+| **Comprovante de Garantia** | Upload (PDF) | Condicional | Certificado de garantia ou apólice de suporte do fabricante. |
+| **Documentação Técnica** | Upload (PDF) | Condicional | Datasheet, manual ou laudo técnico de homologação. |
+| **Evidência de Auditoria** | Upload (PDF) | Condicional | Laudo de auditoria interna/externa ou checklist de segurança. |
+| **Contrato** | Upload (PDF) | **Mandatório** | Cópia do contrato de compra ou prestação de serviços. |
+
 
 ---
 
