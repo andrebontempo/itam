@@ -5,7 +5,7 @@
 | Campo | Informação |
 | --- | --- |
 | Documento | Diretrizes Corporativas para Implementação da Gestão de Ativos de TI (ITAM) |
-| Versão | 5.0 |
+| Versão | 8.0 |
 | Status | Proposta para Aprovação |
 | Autor | André Luiz Bontempo / Especialista ITIL v4 & Arquiteto TOPdesk |
 | Área Responsável | Tecnologia da Informação / Governança de TI |
@@ -30,6 +30,8 @@
 | 4.0 | 14/09/2026 | André Luiz Bontempo / Antigravity | Revisão geral de governança e especificação funcional exaustiva dos Campos Obrigatórios no TOPdesk para Hardware (HAM) e Software (SAM), categorizados por abas. |
 | 5.0 | 14/09/2026 | André Luiz Bontempo / Antigravity | Adequação estrita do escopo para Ativos de Tecnologia da Informação (TI), removendo visões e contextualizações de pesquisa agropecuária, biotecnologia e inovação no campo, focando exclusivamente na gestão corporativa de TI. |
 | 6.0 | 18/09/2026 | André Luiz Bontempo / Antigravity | Alinhamento da taxonomia de classes (Apêndice C) e do Dicionário de Dados do modelo 'Estação de Trabalho' (Apêndice D.1) com a implementação no TOPdesk Designer de Modelo, incorporando as 6 seções funcionais (Identificação, Especificações Técnicas & CMDB, Financeiro/Contratual, Custódia/Compliance, Grade de Relações e Documentos). |
+| 7.0 | 18/09/2026 | André Luiz Bontempo / Antigravity | Incorporação do modelo 'Dispositivo Móvel' (Smartphones, Tablets, Modems), expansão da taxonomia no Apêndice C e inclusão do Dicionário de Dados detalhado (Apêndice D.3) alinhado com o TOPdesk Designer de Modelo. |
+| 8.0 | 18/09/2026 | André Luiz Bontempo / Antigravity | Incorporação do modelo 'Monitor' (Visores e Displays corporativos), especificação do Dicionário de Dados detalhado no Apêndice D.4 e renumeração de regras de validação para D.5. |
 
 * * *
 
@@ -590,10 +592,11 @@ A matriz abaixo define as responsabilidades funcionais para cada atividade crít
 Para a parametrização no Designer de Modelo do TOPdesk Asset Management, a estrutura lógica de objetos respeita a seguinte taxonomia cadastrada no sistema:
 
 ### 1. Modelos sob a Classe "Ativo"
+- **Dispositivo Móvel:** Smartphones, Tablets, Modems corporativos e SIM Cards / eSIM (HAM - Mobile Endpoints).
 - **Equipamento de Rede:** Switches, Roteadores, Firewalls, Access Points, Appliances de Rede.
 - **Estação de Trabalho:** Desktops e Notebooks corporativos (HAM - User Endpoints).
 - **Licença de Software:** Licenciamento On-Premise, subscrições SaaS, licenças corporativas (SAM).
-- **Monitor:** Monitores individuais acoplados ou em estoque.
+- **Monitor:** Monitores individuais acoplados, displays ultrawide e visores corporativos (HAM - Displays).
 - **Periférico:** Nobreaks, Impressoras, Scanners, Dock Stations, Acessórios.
 - **Servidor:** Servidores físicos, Storages e chassis de Data Center.
 
@@ -785,12 +788,181 @@ Os ativos de software do modelo **Licença de Software** (subscrições SaaS, li
 
 ---
 
-## D.3 – Regras de Validação, Nomenclatura e Triggers de Automação no TOPdesk
+## D.3 – Dicionário de Campos Obrigatórios para Ativos de Hardware (Modelo "Dispositivo Móvel")
+
+Os ativos de hardware do modelo **Dispositivo Móvel** (Smartphones, Tablets, Modems e SIM Cards) são cadastrados no TOPdesk contemplando a seguinte estrutura de seções, campos, relações e documentos:
+
+### Seção 1: Identificação & Informações Gerais
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Nome do dispositivo** | Texto Curto | **Mandatório** | Identificação do dispositivo mobile (Ex: `TEL-ANDRE`, `SMART-0012`). | Operação TI / Discovery |
+| **Tipo de Dispositivo** | Dropdown | **Mandatório** | Tipo de ativo: `[Smartphone, Tablet, Modem / MiFi, Chip GSM / eSIM]`. | Operação TI |
+| **Marca** | Dropdown / Texto | **Mandatório** | Fabricante homologado: `[Samsung, Apple, Motorola, Xiaomi, Huawei]`. | Operação TI |
+| **Modelo Comercial** | Texto Curto | **Mandatório** | Modelo comercial exato (Ex: `Galaxy S23`, `iPhone 15 Pro`, `Tab S9`). | Operação TI |
+| **Número de série** | Texto Curto | **Mandatório** | Código de série exclusivo do fabricante (Ex: `R58M10XXXXX`). | Operação TI / Discovery |
+| **IMEI 1** | Texto Curto (15 dígs) | **Mandatório** | Primeiro identificador internacional de equipamento móvel. | Operação TI / MDM |
+| **IMEI 2** | Texto Curto (15 dígs) | Condicional | Segundo IMEI (suporte a Dual SIM / eSIM). | Operação TI / MDM |
+| **Patrimônio** | Alfanumérico | **Mandatório** | Número gravado na etiqueta física de tombo/patrimônio. | Controladoria / Patrimônio |
+| **Status** | Dropdown | **Mandatório** | Ciclo de vida: `[Planejado, Em Estoque, Em Uso, Em Manutenção, Em Descarte, Desativado]`. | Operação TI / Service Desk |
+
+### Seção 2: Especificações Técnicas & CMDB
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Sistema Operacional** | Dropdown | **Mandatório** | Sistema do dispositivo: `[Android, iOS, iPadOS, Outro]`. | Operação TI / MDM |
+| **Versão do SO** | Texto Curto | **Mandatório** | Versão do SO mobile (Ex: `Android 14`, `iOS 17.4`). | MDM / TI |
+| **Armazenamento** | Texto Curto | **Mandatório** | Capacidade de armazenamento interno (Ex: `128 GB`, `256 GB`). | Operação TI |
+| **Memória RAM** | Texto Curto | **Mandatório** | Capacidade de memória RAM (Ex: `6 GB`, `8 GB`, `12 GB`). | Operação TI |
+| **Número da Linha** | Texto Curto | Condicional | Número telefônico / linha associada (Ex: `+55 (61) 99999-8888`). | Operação TI / Telecom |
+| **Operadora** | Dropdown | Condicional | Operadora de telefonia móvel: `[Vivo, Claro, TIM, Outra]`. | Operação TI / Telecom |
+| **ICCID** | Texto Curto (20 dígs) | Condicional | Identificador do SIM Card físico / eSIM (Ex: `89551012345678901234`). | Operação TI / Telecom |
+| **MAC** | Texto (Regex) | **Mandatório** | Endereço MAC da placa Wi-Fi. Requerido para controle de rede. | MDM / TI |
+| **IP** | Texto (Regex) | Condicional | Endereço IP na rede corporativa ou VPN. | MDM / Infra |
+| **IMEI 1** | Texto Curto | **Mandatório** | Reiteração do IMEI 1 registrado para batimento CMDB/MDM. | MDM / TI |
+
+### Seção 3: Financeiro, Contratual & Suprimentos
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Fornecedor** | Link Interno / Dropdown | **Mandatório** | Razão Social do fornecedor / revenda (CNPJ). | Compras |
+| **Data de Aquisição** | Data | **Mandatório** | Data oficial de faturamento/compra do dispositivo. | Compras |
+| **Valor de Aquisição** | Moeda (BRL) | **Mandatório** | Valor unitário de compra constante na Nota Fiscal. | Compras / Controladoria |
+| **Nota Fiscal** | Texto Curto | **Mandatório** | Número do documento fiscal de faturamento. | Compras / Suprimentos |
+| **Contrato** | Link Interno | **Mandatório** | Vínculo com o contrato de aquisição ou comodato telecom (ITCM). | Compras |
+| **Início da Garantia** | Data | **Mandatório** | Data inicial da garantia do fabricante. | Compras / TI |
+| **Fim da Garantia** | Data | **Mandatório** | Data de término da garantia do fabricante. | Compras / TI |
+| **Centro de Custo** | Dropdown | **Mandatório** | Código contábil da unidade pagadora para rateio financeiro. | Governança TI |
+| **Data Prevista de Descarte** | Data | Condicional | Data planejada para substituição tecnológica (*Mobile Refresh*). | Governança TI |
+
+### Seção 4: Custódia, Segurança & Compliance
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Responsável pelo Ativo** | Link Interno | Condicional | Busca direta na tabela de Pessoas (Mandatório se Status = `Em Uso`). | Service Desk / TI |
+| **Unidade** | Link Interno / Dropdown | **Mandatório** | Unidade Embrapa de alocação do dispositivo. | Operação TI |
+| **Localização** | Texto Curto / Dropdown | **Mandatório** | Alocação física ou departamento do usuário. | Operação TI |
+| **Data da Entrega** | Data | Condicional | Data de entrega do dispositivo móvel ao usuário. | Service Desk / TI |
+| **Termo de Responsabilidade** | Dropdown | **Mandatório** | Status do termo: `[Aguardando Aceite no SSP, Aceito Digitalmente, Isento]`. | Action Sequence / SSP |
+| **Situação da Custódia** | Dropdown | **Mandatório** | Diagnóstico de posse: `[Regular, Pendente de Aceite, Extraviado, Em Devolução]`. | Governança TI |
+| **Classificação da Informação** | Dropdown | **Mandatório** | Sigilo dos dados: `[Pública, Interna, Confidencial, Restrita]`. | Segurança da Informação |
+| **Dados Pessoais Tratados?** | Booleano (Sim/Não) | **Mandatório** | Indica se o dispositivo trata/acessa dados pessoais (LGPD). | Segurança / Compliance |
+| **Situação de Compliance** | Dropdown | **Mandatório** | Diagnóstico MDM e segurança: `[Em Conformidade, Não Conforme, Em Auditoria]`. | Segurança / Compliance |
+| **Data da Última Avaliação** | Data | Condicional | Timestamp da última verificação MDM / auditoria. | Segurança / Audit |
+
+### Seção 5: Grade de Relações
+
+| Entidade Relacionada | Tipo de Vínculo | Obrigatoriedade | Regra de Negócio / Descrição |
+| --- | --- | --- | --- |
+| **Usuário** | Link de Entidade | **Mandatório** | Vínculo direto com a pessoa custodiante do dispositivo. |
+| **Linha / Serviço** | Link de Entidade | Condicional | Vínculo com a linha telefônica / plano corporativo de dados. |
+| **Chamado** | Link de Entidade | Condicional | Histórico de chamados e suporte vinculados. |
+| **Contrato** | Link de Entidade | **Mandatório** | Vínculo com contrato de aquisição ou operadora de telefonia. |
+
+### Seção 6: Documentos (Anexos Comprobatórios)
+
+| Tipo de Documento | Formato de Arquivo | Obrigatoriedade | Descrição / Finalidade |
+| --- | --- | --- | --- |
+| **Nota Fiscal** | Upload (PDF/Imagem) | **Mandatório** | Documento fiscal de faturamento do dispositivo. |
+| **Termo de Responsabilidade** | Upload (PDF/Doc) | Condicional | Termo assinado fisicamente (se não for via SSP). |
+| **Comprovante de Garantia** | Upload (PDF) | Condicional | Certificado de garantia do fabricante. |
+| **Documentação Técnica** | Upload (PDF) | Condicional | Datasheet ou especificações homologadas do modelo. |
+| **Evidência de Auditoria** | Upload (PDF) | Condicional | Relatório de conformidade de MDM ou segurança. |
+| **Contrato** | Upload (PDF) | **Mandatório** | Cópia do contrato de compra ou comodato com operadora. |
+
+
+---
+
+## D.4 – Dicionário de Campos Obrigatórios para Ativos de Hardware (Modelo "Monitor")
+
+Os ativos de hardware do modelo **Monitor** (Displays, Visores e Monitores Corporativos) são cadastrados no TOPdesk contemplando a seguinte estrutura de seções, campos, relações e documentos:
+
+### Seção 1: Identificação & Informações Gerais
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Tipo de Monitor** | Dropdown | **Mandatório** | Tipo de tela: `[LED, LCD, OLED, Ultrawide, Touchscreen, Curvo]`. | Operação TI |
+| **Marca** | Dropdown / Texto | **Mandatório** | Fabricante homologado: `[Dell, Samsung, LG, HP, AOC, Lenovo]`. | Operação TI |
+| **Modelo Comercial** | Texto Curto | **Mandatório** | Modelo exato do fabricante (Ex: `P2422H`, `UltraSharp U2723QE`). | Operação TI |
+| **Número de Série** | Texto Curto | **Mandatório** | Código exclusivo (S/N) do fabricante (Ex: `CN-0V1234-74261-34A-1234`). | Operação TI |
+| **Patrimônio** | Alfanumérico | **Mandatório** | Número gravado na etiqueta física de tombo/patrimônio. | Controladoria / Patrimônio |
+| **Status** | Dropdown | **Mandatório** | Ciclo de vida: `[Planejado, Em Estoque, Em Uso, Em Manutenção, Em Descarte, Desativado]`. | Operação TI / Service Desk |
+
+### Seção 2: Especificações Técnicas & CMDB
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Tamanho da Tela** | Texto Curto / Número | **Mandatório** | Tamanho da tela em polegadas (Ex: `21.5"`, `23.8"`, `27"`, `34"`). | Operação TI |
+| **Resolução** | Dropdown / Texto | **Mandatório** | Resolução nativa: `[Full HD (1920x1080), 4K UHD (3840x2160), 2K QHD (2560x1440)]`. | Operação TI |
+| **Proporção de Tela** | Dropdown | **Mandatório** | Formato de exibição: `[16:9, 16:10, 21:9, 32:9]`. | Operação TI |
+| **Tecnologia do Painel** | Dropdown | **Mandatório** | Tipo de painel: `[IPS, VA, TN, OLED, QD-OLED]`. | Operação TI |
+| **Taxa de Atualização** | Texto Curto / Dropdown | **Mandatório** | Frequência de atualização em Hz (Ex: `60 Hz`, `75 Hz`, `144 Hz`). | Operação TI |
+| **Tempo de Resposta** | Texto Curto | **Mandatório** | Tempo de resposta de píxel (Ex: `5 ms`, `1 ms`). | Operação TI |
+| **Conexões de Vídeo** | Texto Curto / Dropdown | **Mandatório** | Portas de entrada suportadas (Ex: `HDMI, DisplayPort, USB-C, VGA`). | Operação TI |
+| **USB Hub** | Dropdown / Booleano | **Mandatório** | Presença de hub USB integrado: `[Sim (4 portas USB-A/C), Não]`. | Operação TI |
+| **Alto-falantes** | Booleano (Sim/Não) | **Mandatório** | Presença de alto-falantes embutidos no monitor. | Operação TI |
+| **Ajuste de Posição** | Dropdown / Texto | **Mandatório** | Capacidade ergonômica: `[PIVOT (Giratória), Altura, Inclinação, Suporte VESA]`. | Operação TI |
+| **Energia / Voltagem** | Dropdown | **Mandatório** | Alimentação elétrica: `[Bivolt 110V/220V, Fonte Externa 19V]`. | Operação TI |
+| **MAC** | Texto (Regex) | Condicional | Endereço MAC da placa de rede (Monitores com Dock Station / RJ45 embutida). | Discovery / TI |
+| **IP** | Texto (Regex) | Condicional | Endereço IP atribuído (Monitores inteligentes / Smart Display de rede). | Discovery / Infra |
+
+### Seção 3: Financeiro, Contratual & Suprimentos
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Fornecedor** | Link Interno / Dropdown | **Mandatório** | Razão Social do fornecedor / revenda (CNPJ). | Compras |
+| **Data de Aquisição** | Data | **Mandatório** | Data oficial de faturamento/compra do monitor. | Compras |
+| **Valor de Aquisição** | Moeda (BRL) | **Mandatório** | Valor unitário de compra constante na Nota Fiscal. | Compras / Controladoria |
+| **Nota Fiscal** | Texto Curto | **Mandatório** | Número do documento fiscal de faturamento. | Compras / Suprimentos |
+| **Contrato** | Link Interno | **Mandatório** | Vínculo com o contrato de aquisição ou fornecimento (ITCM). | Compras |
+| **Início da Garantia** | Data | **Mandatório** | Data inicial da garantia do fabricante. | Compras / TI |
+| **Fim da Garantia** | Data | **Mandatório** | Data de término da garantia/suporte do fabricante. | Compras / TI |
+| **Centro de Custo** | Dropdown | **Mandatório** | Código contábil da unidade pagadora para rateio financeiro. | Governança TI |
+| **Data Prevista de Descarte** | Data | Condicional | Data planejada para substituição tecnológica (*Hardware Refresh*). | Governança TI |
+
+### Seção 4: Custódia, Segurança & Compliance
+
+| Nome do Campo no TOPdesk | Tipo do Dado | Obrigatoriedade | Regra de Negócio / Origem | Perfil Responsável |
+| --- | --- | --- | --- | --- |
+| **Responsável pelo Ativo** | Link Interno | Condicional | Busca direta na tabela de Pessoas (Mandatório se Status = `Em Uso`). | Service Desk / TI |
+| **Unidade** | Link Interno / Dropdown | **Mandatório** | Unidade Embrapa de alocação do monitor. | Operação TI |
+| **Localização** | Texto Curto / Dropdown | **Mandatório** | Detalhamento físico da alocação (Ex: `Prédio Central - Sala 102`). | Operação TI |
+| **Data da Entrega** | Data | Condicional | Data de entrega do monitor ao usuário custodiante. | Service Desk / TI |
+| **Termo de Responsabilidade** | Dropdown | **Mandatório** | Status do termo: `[Aguardando Aceite no SSP, Aceito Digitalmente, Isento]`. | Action Sequence / SSP |
+| **Situação da Custódia** | Dropdown | **Mandatório** | Diagnóstico de posse: `[Regular, Pendente de Aceite, Extraviado, Em Devolução]`. | Governança TI |
+| **Classificação da Informação** | Dropdown | **Mandatório** | Grau de sigilo: `[Pública, Interna, Confidencial, Restrita]`. | Segurança da Informação |
+| **Situação de Compliance** | Dropdown | **Mandatório** | Diagnóstico de conformidade: `[Em Conformidade, Não Conforme, Em Auditoria]`. | Segurança / Compliance |
+| **Data da Última Avaliação** | Data | Condicional | Timestamp da última verificação ou auditoria patrimonial. | Segurança / Audit |
+
+### Seção 5: Grade de Relações
+
+| Entidade Relacionada | Tipo de Vínculo | Obrigatoriedade | Regra de Negócio / Descrição |
+| --- | --- | --- | --- |
+| **Usuário** | Link de Entidade | **Mandatório** | Vínculo direto com a pessoa custodiante do monitor. |
+| **Estação de Trabalho Relacionada** | Link de Entidade | Condicional | Vínculo direto com o Desktop ou Notebook ao qual o monitor está conectado. |
+| **Localização** | Link de Entidade | **Mandatório** | Vínculo com a estrutura de localização física. |
+
+### Seção 6: Documentos (Anexos Comprobatórios)
+
+| Tipo de Documento | Formato de Arquivo | Obrigatoriedade | Descrição / Finalidade |
+| --- | --- | --- | --- |
+| **Nota Fiscal** | Upload (PDF/Imagem) | **Mandatório** | Cópia da Nota Fiscal de faturamento do equipamento. |
+| **Termo de Responsabilidade** | Upload (PDF/Doc) | Condicional | Termo de Guarda assinado fisicamente (quando fora do SSP). |
+| **Documento de Aquisição** | Upload (PDF) | Condicional | Cópia do pedido de compra / ordem de fornecimento. |
+| **Comprovante de Garantia** | Upload (PDF) | Condicional | Certificado de garantia ou apólice de suporte do fabricante. |
+| **Documentação Técnica** | Upload (PDF) | Condicional | Datasheet ou manual do fabricante. |
+
+
+---
+
+## D.5 – Regras de Validação, Nomenclatura e Triggers de Automação no TOPdesk
 
 Para evitar dados inconsistentes e garantir automação eficiente nos fluxos operacionais do TOPdesk, aplicam-se as seguintes regras de validação e automações nativas (*Action Sequences*):
 
 ### 1. Padrões Obrigatórios de Nomenclatura (Asset Tags / Primary Keys)
 - **User Endpoints:** `NB-[SEQUENCIAL_5_DIGITOS]` para Notebooks (Ex: `NB-04821`); `DT-[SEQUENCIAL_5_DIGITOS]` para Desktops (Ex: `DT-01293`).
+- **Dispositivos Móveis:** `MOB-[SEQUENCIAL_5_DIGITOS]` para Smartphones/Tablets (Ex: `MOB-00142`); `MOD-[SEQUENCIAL_5_DIGITOS]` para Modems 4G/5G (Ex: `MOD-00034`).
+- **Monitores e Visores:** `MON-[SEQUENCIAL_5_DIGITOS]` para Monitores (Ex: `MON-00812`).
 - **Servidores e Data Center:** `SRV-[SLA/SIGLA]-[SEQ]` (Ex: `SRV-DB-0012`); `STG-[SEQ]` para Storages; `SW-[SEQ]` para Switches.
 - **Licenças de Software:** `SW-LIC-[FABRICANTE]-[SIGLA_PROD]` (Ex: `SW-LIC-MS-M365-PREM`, `SW-LIC-MATH-MATLAB24`).
 
@@ -798,6 +970,8 @@ Para evitar dados inconsistentes e garantir automação eficiente nos fluxos ope
 - **Endereço MAC:** `^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$` (Impede o cadastro de endereços MAC inválidos ou sem formatadores padrão).
 - **Endereço IP IPv4:** `^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.){3}(25[0-5]|(2[0-4]|1\d|[1-9]|)\d)$`
 - **Número de Série (S/N):** `^[A-Za-z0-9\-\_]{5,30}$` (Garante entre 5 e 30 caracteres alfanuméricos sem espaços).
+- **IMEI (1 e 2):** `^[0-9]{15}$` (Exatamente 15 dígitos numéricos).
+- **ICCID:** `^[0-9]{18,20}$` (Entre 18 e 20 dígitos numéricos).
 
 ### 3. Automações de Eventos via Action Sequences
 - **Trigger de Confirmação no SSP:** Quando o usuário clica em "Confirmar Aceite" no Termo de Guarda no Portal SSP:
@@ -808,3 +982,5 @@ Para evitar dados inconsistentes e garantir automação eficiente nos fluxos ope
   - O **Estado do Ciclo de Vida** do ativo altera para `Em Manutenção`.
 - **Trigger de Régua de Alertas Contratuais (SAM/ITCM):** Executado diariamente às 06:00:
   - Dispara notificação à equipe de Compras aos **120, 90, 60 e 30 dias** antes da *Data de Expiração / Renovação* de qualquer licença de software ou garantia de hardware.
+
+
